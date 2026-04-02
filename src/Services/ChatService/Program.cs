@@ -176,11 +176,12 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAll",
         policy =>
         {
-            policy.AllowAnyOrigin()
-                  .AllowAnyMethod()
-                  .AllowAnyHeader()
-                  .AllowCredentials(); // SignalR需要
-        });
+            policy.WithOrigins("http://localhost:3001")
+           .AllowAnyHeader()
+           .AllowAnyMethod()
+           .AllowCredentials(); // 支持带Cookie/Token
+        }
+        );
 });
 
 // 12. 注册自定义服务

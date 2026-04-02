@@ -153,9 +153,10 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAll",
         policy =>
         {
-            policy.AllowAnyOrigin()
-                  .AllowAnyMethod()
-                  .AllowAnyHeader();
+            policy.WithOrigins("http://localhost:3001")
+          .AllowAnyHeader()
+          .AllowAnyMethod()
+          .AllowCredentials(); // 支持带Cookie/Token
         });
 });
 
@@ -249,7 +250,7 @@ if (app.Environment.IsDevelopment())
 {
     using var scope = app.Services.CreateScope();
     var dbContext = scope.ServiceProvider.GetRequiredService<CommunityDbContext>();
-    await dbContext.Database.EnsureCreatedAsync();
+   // await dbContext.Database.EnsureCreatedAsync();
 }
 
 app.Run();

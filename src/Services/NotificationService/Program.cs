@@ -156,10 +156,10 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAll",
         policy =>
         {
-            policy.AllowAnyOrigin()
-                  .AllowAnyMethod()
-                  .AllowAnyHeader()
-                  .AllowCredentials(); // SignalR需要AllowCredentials
+            policy.WithOrigins("http://localhost:5100")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials(); // 保留凭据支持
         });
 });
 

@@ -188,6 +188,8 @@ builder.Services.AddSingleton<IPaymentGatewayFactory, PaymentGatewayFactory>();
 
 // AutoMapper配置
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+// 🔥 关键：注册 HttpClient 工厂
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 

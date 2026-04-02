@@ -1,0 +1,63 @@
+[
+  {
+    "Name": "新建配置文件",
+    "Projects": [
+      {
+        "Path": "Services\\UserService\\UserService.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "Services\\WritingService\\WritingService.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "Services\\CommunityService\\CommunityService.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "Services\\AIService\\AIService.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "Services\\PaymentService\\PaymentService.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "Services\\ChatService\\ChatService.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "Services\\FileService\\FileService.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "Services\\SearchService\\SearchService.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "Services\\FriendshipService\\FriendshipService.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "Services\\NotificationService\\NotificationService.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "Shared\\Shared.Core\\Shared.Core.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "Shared\\Shared.Models\\Shared.Models.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "Shared\\Shared.Infrastructure\\Shared.Infrastructure.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "Tests\\UserService.Tests\\UserService.Tests.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

@@ -151,9 +151,10 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAll",
         policy =>
         {
-            policy.AllowAnyOrigin()
-                  .AllowAnyMethod()
-                  .AllowAnyHeader();
+            policy.WithOrigins("http://localhost:3001")
+          .AllowAnyHeader()
+          .AllowAnyMethod()
+          .AllowCredentials(); // 支持带Cookie/Token
         });
 });
 
@@ -165,6 +166,8 @@ builder.Services.AddScoped<IIFriendshipService, IFriendshipService>();
 
 // AutoMapper配置
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+// 👇 关键代码：注册 HttpClient（推荐方式）
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
