@@ -1,0 +1,18 @@
+{
+  "version": 2,
+  "dgSpecHash": "qGBMPFR31xE=",
+  "success": true,
+  "projectFilePath": "D:\\Project\\paperSystem\\src\\Shared\\Shared.Core\\Shared.Core.csproj",
+  "expectedPackageFiles": [],
+  "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "message": "读取缓存文件 D:\\Project\\paperSystem\\src\\Shared\\Shared.Core\\obj\\project.nuget.cache 时遇到问题: '<' is an invalid start of a property name. Expected a '\"'. Path: $ | LineNumber: 2 | BytePositionInLine: 0.",
+      "projectPath": "D:\\Project\\paperSystem\\src\\Shared\\Shared.Core\\Shared.Core.csproj",
+      "warningLevel": 1,
+      "filePath": "D:\\Project\\paperSystem\\src\\Shared\\Shared.Core\\Shared.Core.csproj",
+      "targetGraphs": []
+    }
+  ]
+}

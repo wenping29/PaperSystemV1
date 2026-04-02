@@ -1,0 +1,43 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git init:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(find . -type f -name *.js -o -name *.ts -o -name *.py -o -name *.java -o -name *.go -o -name *.json -o -name *.md)",
+      "Bash(find /d/Project/paperSystem -type f -name .*)",
+      "Bash(flutter create:*)",
+      "Bash(copy:*)",
+      "Bash(cd:*)",
+      "Bash(flutter pub:*)",
+      "Bash(xargs grep:*)",
+      "Bash(python -m alembic revision --autogenerate -m \"add_user_fields\")",
+      "Bash(alembic revision:*)",
+      "Bash(python -c \"import alembic; print\\(''alembic installed''\\)\")",
+      "Bash(python -m alembic.command revision --autogenerate -m \"add_user_fields\")",
+      "Bash(python -c \"from app.models.article import Article; from app.schemas.article import ArticleCreate; print\\(''Import successful''\\)\")",
+      "Bash(python:*)",
+      "Bash(dir:*)",
+      "Bash(dart analyze:*)",
+      "Bash(npx create-react-app:*)",
+      "Bash(npm install:*)",
+      "Bash(dotnet:*)",
+      "Bash(pwd:*)",
+      "Bash(rm -rf csharp)",
+      "Bash(mkdir csharp:*)",
+      "Bash(mkdir:*)",
+      "Bash(find . -type d -name *mobile* -o -name *flutter*)",
+      "Bash(xargs head:*)",
+      "Bash(find /d/Project/paperSystem -name \"*.cs\" -type f -exec grep -l \"Hub\\\\|SignalR\" {})",
+      "Bash(find /d/Project/paperSystem -name \"*.cs\" -type f -exec grep -l \"WebSocket\\\\|UseWebSockets\" {})",
+      "Bash(find src/Services/FileService/Controllers -type f -name *.cs)",
+      "Bash(ls -la \"d:\\\\Project\\\\paperSystem\\\\src\\\\Services\\\\FriendshipService\\\\Controllers\"\" 2>/dev/null || echo \"目录不存在 \")",
+      "Bash(find d:ProjectpaperSystem -type f -name *.csproj)",
+      "Bash(grep -n \"CREATE DATABASE IF NOT EXISTS \\\\`writing_platform_chat\\\\`\" \"d:\\\\Project\\\\paperSystem\\\\database_schema_basic_mysql.sql\")",
+      "Bash(\"d:\\\\Project\\\\paperSystem\\\\DATABASE_SETUP.md\")",
+      "Bash(ls -la *.sln)",
+      "Bash(ls -la *.json *.yml *.yaml *.xml *.ini)",
+      "Bash(npm run:*)"
+    ]
+  }
+}

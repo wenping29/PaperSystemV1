@@ -1,0 +1,88 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "F:\\Project\\PaperSystem\\src\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{8D8105A3-6420-4A12-881C-C9D6A8EB29FC}|Services\\UserService\\UserService.csproj|f:\\project\\papersystem\\src\\services\\userservice\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{8D8105A3-6420-4A12-881C-C9D6A8EB29FC}|Services\\UserService\\UserService.csproj|solutionrelative:services\\userservice\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8D8105A3-6420-4A12-881C-C9D6A8EB29FC}|Services\\UserService\\UserService.csproj|f:\\project\\papersystem\\src\\services\\userservice\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8D8105A3-6420-4A12-881C-C9D6A8EB29FC}|Services\\UserService\\UserService.csproj|solutionrelative:services\\userservice\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8D8105A3-6420-4A12-881C-C9D6A8EB29FC}|Services\\UserService\\UserService.csproj|f:\\project\\papersystem\\src\\services\\userservice\\data\\userdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8D8105A3-6420-4A12-881C-C9D6A8EB29FC}|Services\\UserService\\UserService.csproj|solutionrelative:services\\userservice\\data\\userdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8D8105A3-6420-4A12-881C-C9D6A8EB29FC}|Services\\UserService\\UserService.csproj|f:\\project\\papersystem\\src\\services\\userservice\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8D8105A3-6420-4A12-881C-C9D6A8EB29FC}|Services\\UserService\\UserService.csproj|solutionrelative:services\\userservice\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "F:\\Project\\PaperSystem\\src\\Services\\UserService\\appsettings.json",
+              "RelativeDocumentMoniker": "Services\\UserService\\appsettings.json",
+              "ToolTip": "F:\\Project\\PaperSystem\\src\\Services\\UserService\\appsettings.json",
+              "RelativeToolTip": "Services\\UserService\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvw4AAACBAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-04-01T13:33:05.204Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "UserDbContext.cs",
+              "DocumentMoniker": "F:\\Project\\PaperSystem\\src\\Services\\UserService\\Data\\UserDbContext.cs",
+              "RelativeDocumentMoniker": "Services\\UserService\\Data\\UserDbContext.cs",
+              "ToolTip": "F:\\Project\\PaperSystem\\src\\Services\\UserService\\Data\\UserDbContext.cs",
+              "RelativeToolTip": "Services\\UserService\\Data\\UserDbContext.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAiwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-01T13:31:07.397Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "UserService.cs",
+              "DocumentMoniker": "F:\\Project\\PaperSystem\\src\\Services\\UserService\\Services\\UserService.cs",
+              "RelativeDocumentMoniker": "Services\\UserService\\Services\\UserService.cs",
+              "ToolTip": "F:\\Project\\PaperSystem\\src\\Services\\UserService\\Services\\UserService.cs",
+              "RelativeToolTip": "Services\\UserService\\Services\\UserService.cs",
+              "ViewState": "AgIAAK0AAAAAAAAAAAApwLsAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-01T13:29:34.582Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "F:\\Project\\PaperSystem\\src\\Services\\UserService\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "Services\\UserService\\Controllers\\AuthController.cs",
+              "ToolTip": "F:\\Project\\PaperSystem\\src\\Services\\UserService\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "Services\\UserService\\Controllers\\AuthController.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAAAwAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-01T13:27:59.004Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

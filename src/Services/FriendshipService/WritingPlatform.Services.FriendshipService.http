@@ -1,0 +1,6 @@
+@FriendshipService_HostAddress = http://localhost:5034
+
+GET {{FriendshipService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,0 +1,6 @@
+@WritingService_HostAddress = http://localhost:5083
+
+GET {{WritingService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

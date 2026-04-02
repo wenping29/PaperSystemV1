@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir Data)",
+      "Bash(dir)",
+      "Bash(ls -la appsettings.*)",
+      "Bash(dotnet build:*)"
+    ]
+  }
+}

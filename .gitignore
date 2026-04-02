@@ -1,0 +1,104 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+/coverage/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+/apps/admin/node_modules
+/apps/admin/public
+
+/apps/web/node_modules
+/apps/web/public
+
+/apps/mobile/android
+/apps/mobile/ios
+/apps/mobile/build
+/apps/mobile/web
+/apps/mobile/apps
+/src/Services/AIService/bin
+/src/Services/AIService/obj
+
+/src/Services/ChatService/bin
+/src/Services/ChatService/obj
+
+/src/Services/CommunityService/bin
+/src/Services/CommunityService/obj
+
+/src/Services/FileService/bin
+/src/Services/FileService/obj
+
+/src/Services/FrendshipService/bin
+/src/Services/FrendshipService/obj
+
+/src/Services/NotificationService/bin
+/src/Services/NotificationService/obj
+
+/src/Services/PaymentService/bin
+/src/Services/PaymentService/obj
+
+/src/Services/SearchService/bin
+/src/Services/SearchService/obj
+
+/src/Services/UserService/bin
+/src/Services/UserService/obj
+
+/src/Services/WritingService/bin
+/src/Services/WritingService/obj
+
+
+/src/Shared/Core/bin
+/src/Shared/Core/obj
+
+/src/Shared/Infrastructure/bin
+/src/Shared/Infrastructure/obj
+
+/src/Shared/Models/bin
+/src/Shared/Models/obj
+
+/src/Tests/UserService.Tests/bin
+/src/Tests/UserService.Tests/obj
+
+/src/Publish
+
+
+
+.fake
