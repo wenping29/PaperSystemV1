@@ -151,7 +151,7 @@ const AdminLayout: React.FC = () => {
           items={menuItems}
         />
       </Sider>
-      <Layout style={{ marginLeft: collapsed ? 80 : 220, transition: 'all 0.2s' }}>
+      <Layout style={{ marginLeft: collapsed ? 80 : 0, transition: 'all 0.2s' }}>
         <Header className={styles.header}>
           <div className={styles.headerLeft}>
             <Button
