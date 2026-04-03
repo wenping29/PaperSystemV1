@@ -66,27 +66,27 @@ export default defineConfig({
     open: true,
     proxy: {
         '/api/v1/auth': {
-        target: 'http://localhost:5000',
+        target: 'http://8.136.202.27:5100',
         changeOrigin: true,
         secure: false,
       },
       '/api/v1/users': {
-        target: 'http://localhost:5000',  // 认证后端
+        target: 'http://8.136.202.27:5100',  // 认证后端
         changeOrigin: true,
         secure: false,
       },
       '/api/v1/activity-logs': {
-        target: 'http://localhost:5000',  // 认证后端
+        target: 'http://8.136.202.27:5100',  // 认证后端
         changeOrigin: true,
         secure: false,
       },
       '/api/v1/works': {
-        target: 'http://localhost:5001',  // 认证后端
+        target: 'http://8.136.202.27:5101',  // 认证后端
         changeOrigin: true,
         secure: false,
       },
       '/api/v1/comments': {
-        target: 'http://localhost:5002',  // 认证后端
+        target: 'http://8.136.202.27:5102',  // 认证后端
         changeOrigin: true,
         secure: false,
       },
