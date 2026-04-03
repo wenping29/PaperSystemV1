@@ -6,6 +6,7 @@ import { ConfigProvider } from 'antd'
 import zhCN from 'antd/locale/zh_CN'
 import { store } from './store'
 import App from './App'
+// @ts-ignore
 import './styles/globals.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

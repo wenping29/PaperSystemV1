@@ -13,10 +13,13 @@ export interface RegisterRequest {
   password: string
 }
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL 
+ 
+
 export const authApi = createApi({
   reducerPath: 'authApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: '/api/auth',
+    baseUrl: `${API_BASE_URL}/auth`,
     prepareHeaders: (headers) => {
       const token = localStorage.getItem('token')
       if (token) {

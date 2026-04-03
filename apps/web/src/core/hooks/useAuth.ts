@@ -1,7 +1,8 @@
+/// <reference types="vite/client" />
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useLoginMutation, useLogoutMutation, useGetProfileQuery } from '@/store/api/authApi'
-import { clearCredentials, setCredentials, setUser } from '@/store/slices/authSlice'
+import { useLoginMutation, useLogoutMutation, useGetProfileQuery, LoginRequest } from '@/store/api/authApi'
+import { clearCredentials, setCredentials, setUser, UserProfile } from '@/store/slices/authSlice'
 import type { RootState, AppDispatch } from '@/store'
 
 export const useAuth = () => {
@@ -14,6 +15,7 @@ export const useAuth = () => {
 
   const login = useCallback(async (credentials: LoginRequest) => {
     try {
+      console.log(import.meta.env.VITE_API_BASE_URL);
       const response = await loginMutation(credentials).unwrap()
       dispatch(setCredentials(response))
       return response
