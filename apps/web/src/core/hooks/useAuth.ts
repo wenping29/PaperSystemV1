@@ -9,13 +9,14 @@ export const useAuth = () => {
   const dispatch = useDispatch<AppDispatch>()
   const [loginMutation] = useLoginMutation()
   const [logoutMutation] = useLogoutMutation()
-  const { data: profile, refetch: refetchProfile } = useGetProfileQuery()
+  const { data: profile, refetch: refetchProfile } = useGetProfileQuery(2)
+  console.log(profile);
 
   const authState = useSelector((state: RootState) => state.auth)
 
   const login = useCallback(async (credentials: LoginRequest) => {
     try {
-      console.log(import.meta.env.VITE_API_BASE_URL);
+      console.log(import.meta.env.VITE_API_BASE_URL, credentials);
       const response = await loginMutation(credentials).unwrap()
       dispatch(setCredentials(response))
       return response
@@ -33,6 +34,7 @@ export const useAuth = () => {
   }, [dispatch, logoutMutation])
 
   const updateProfile = useCallback((profile: UserProfile) => {
+    console.log('Updating user profile:', profile)
     dispatch(setUser(profile))
   }, [dispatch])
 

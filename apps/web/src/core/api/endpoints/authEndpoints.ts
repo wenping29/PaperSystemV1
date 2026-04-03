@@ -1,3 +1,4 @@
+import { UserProfile } from '@/store/slices/authSlice'
 import axiosInstance from '../client'
 
 export interface LoginRequest {
@@ -41,8 +42,8 @@ export const authApi = {
   },
 
   // 获取用户资料
-  getProfile: async (): Promise<UserProfile> => {
-    const response = await axiosInstance.get<ApiResponse<UserProfile>>('/auth/profile')
+  getProfile: async (id: number): Promise<UserProfile> => {
+    const response = await axiosInstance.get<ApiResponse<UserProfile>>(`/auth/profile/${id}`)
     return response.data
   },
 
