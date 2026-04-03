@@ -167,7 +167,7 @@ namespace UserService.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(long id, [FromBody] UpdateUserRequest request)
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserRequest request,long id)
         {
             try
             {
@@ -223,7 +223,7 @@ namespace UserService.Controllers
             }
         }
 
-        [HttpGet("{id}/profile")]
+        [HttpGet("profile/{id}")]
         public async Task<IActionResult> GetUserProfile(long id)
         {
             try
@@ -245,8 +245,8 @@ namespace UserService.Controllers
             }
         }
 
-        [HttpPut("{id}/profile")]
-        public async Task<IActionResult> UpdateUserProfile(long id, [FromBody] UpdateProfileRequest request)
+        [HttpPut("profile/{id}")]
+        public async Task<IActionResult> UpdateUserProfile( [FromBody] UpdateProfileRequest request,long id)
         {
             try
             {
@@ -266,7 +266,7 @@ namespace UserService.Controllers
             }
         }
 
-        [HttpPost("{id}/follow")]
+        [HttpPost("follow/{id}")]
         public async Task<IActionResult> FollowUser(long id)
         {
             try
@@ -303,7 +303,7 @@ namespace UserService.Controllers
             }
         }
 
-        [HttpDelete("{id}/follow")]
+        [HttpDelete("follow/{id}")]
         public async Task<IActionResult> UnfollowUser(long id)
         {
             try
@@ -335,7 +335,7 @@ namespace UserService.Controllers
             }
         }
 
-        [HttpGet("{id}/followers")]
+        [HttpGet("followers/{id}")]
         public async Task<IActionResult> GetFollowers(long id, [FromQuery] int page = 1, [FromQuery] int pageSize = 20)
         {
             try
@@ -352,7 +352,7 @@ namespace UserService.Controllers
             }
         }
 
-        [HttpGet("{id}/following")]
+        [HttpGet("following/{id}")]
         public async Task<IActionResult> GetFollowing(long id, [FromQuery] int page = 1, [FromQuery] int pageSize = 20)
         {
             try
@@ -369,7 +369,7 @@ namespace UserService.Controllers
             }
         }
 
-        [HttpGet("{id}/stats")]
+        [HttpGet("stats/{id}")]
         public async Task<IActionResult> GetUserStats(long id)
         {
             try
@@ -390,9 +390,9 @@ namespace UserService.Controllers
             }
         }
 
-        [HttpPut("{id}/role")]
+        [HttpPut("role/{id}")]
         [Authorize(Roles = "Admin,SuperAdmin")]
-        public async Task<IActionResult> UpdateUserRole(long id, [FromBody] UpdateUserRoleRequest request)
+        public async Task<IActionResult> UpdateUserRole( [FromBody] UpdateUserRoleRequest request,long id)
         {
             try
             {
