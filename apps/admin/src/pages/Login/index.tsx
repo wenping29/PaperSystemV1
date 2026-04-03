@@ -27,15 +27,20 @@ const Login: React.FC = () => {
   const handleSubmit = async (values: LoginRequest) => {
     try {
       setIsSubmitting(true)
+      console.log('登录响应数据：', values)
       const response = await authApi.login(values)
+      console.log('登录响应数据：222', response)
       if (response.data) {
         const { token, refreshToken, expiresAt, user } = response.data;
+        console.log('登录响应数据：', response.data)
 
         // 检查用户角色是否为管理员
-        if (user.role !== 'admin' && user.role !== 'superadmin') {
+        if (user.role.toLowerCase() !== 'admin' && user.role.toLowerCase() !== 'superadmin') {
           showError('非管理员用户，无法登录管理后台')
           return
         }
+        console.log('登录成功，用户信息：', user)
+
 
         login(token, refreshToken, expiresAt, user)
         navigate(ROUTES.DASHBOARD)
