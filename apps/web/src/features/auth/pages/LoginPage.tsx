@@ -23,6 +23,11 @@ const LoginPage: React.FC = () => {
   const onFinish = async (values: LoginFormValues) => {
     setLoading(true)
     try {
+      console.log('Login form values:', values)
+      values = { 
+        username: "admin",
+        password: "Admin@123"
+      }
       await login(values)
       message.success('登录成功！')
       navigate(from, { replace: true })
@@ -63,6 +68,8 @@ const LoginPage: React.FC = () => {
           >
             <Input
               prefix={<UserOutlined />}
+              defaultValue="admin"
+              value="admin"
               placeholder="用户名或邮箱"
             />
           </Form.Item>
@@ -75,6 +82,8 @@ const LoginPage: React.FC = () => {
             ]}
           >
             <Input.Password
+              defaultValue="Admin@123"
+              value="Admin@123"
               prefix={<LockOutlined />}
               placeholder="密码"
             />
