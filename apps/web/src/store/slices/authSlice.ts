@@ -32,7 +32,11 @@ const initialState: AuthState = {
   token: localStorage.getItem('token') || null,
   refreshToken: localStorage.getItem('refreshToken') || null,
   expiresAt: localStorage.getItem('expiresAt') ? Number(localStorage.getItem('expiresAt')) : null,
-  user: null,
+  user: (() => {
+    const storedToken = localStorage.getItem('token')
+    const storedUser = localStorage.getItem('user')
+    return storedToken && storedUser ? JSON.parse(storedUser) : null
+  })(),
   isAuthenticated: !!localStorage.getItem('token'),
   isLoading: false
 }
@@ -53,6 +57,7 @@ const authSlice = createSlice({
       localStorage.setItem('token', token)
       localStorage.setItem('refreshToken', refreshToken)
       localStorage.setItem('expiresAt', expiresAt.toString())
+      localStorage.setItem('user', JSON.stringify(user))
     },
     clearCredentials: (state) => {
       state.token = null
@@ -65,9 +70,12 @@ const authSlice = createSlice({
       localStorage.removeItem('token')
       localStorage.removeItem('refreshToken')
       localStorage.removeItem('expiresAt')
+      localStorage.removeItem('user')
     },
     setUser: (state, action: PayloadAction<UserProfile>) => {
       state.user = action.payload
+      // 更新本地存储中的用户信息
+      localStorage.setItem('user', JSON.stringify(action.payload))
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload
