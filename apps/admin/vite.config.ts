@@ -63,6 +63,11 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
       },
+      '/api/v1/comments': {
+        target: 'http://localhost:5002',  // 认证后端
+        changeOrigin: true,
+        secure: false,
+      },
     },
   },
 })
