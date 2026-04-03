@@ -71,8 +71,8 @@ app.*.map.json
 /src/Services/FileService/bin
 /src/Services/FileService/obj
 
-/src/Services/FrendshipService/bin
-/src/Services/FrendshipService/obj
+/src/Services/FriendshipService/bin
+/src/Services/FriendshipService/obj
 
 /src/Services/NotificationService/bin
 /src/Services/NotificationService/obj

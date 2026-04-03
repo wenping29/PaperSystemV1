@@ -23,7 +23,7 @@ builder.WebHost.ConfigureKestrel(serverOptions =>
     serverOptions.Limits.MaxConcurrentConnections = 10000;
     serverOptions.Limits.MaxConcurrentUpgradedConnections = 10000;
     serverOptions.Limits.MaxRequestBodySize = 100 * 1024 * 1024; // 100MB
-    serverOptions.ListenAnyIP(5005, listenOptions =>
+    serverOptions.ListenAnyIP(5003, listenOptions =>
     {
         listenOptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http1AndHttp2AndHttp3;
     });
