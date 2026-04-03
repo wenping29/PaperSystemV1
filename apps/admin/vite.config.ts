@@ -46,6 +46,7 @@ export default defineConfig({
       '/api/v1/auth': {
         target: 'http://localhost:5000',
         changeOrigin: true,
+        secure: false,
       },
       '/api/v1/users': {
         target: 'http://localhost:5000',  // 认证后端

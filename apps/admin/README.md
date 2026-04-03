@@ -59,7 +59,7 @@ npm run preview
 
 ```env
 # .env.development
-VITE_API_BASE_URL=http://localhost:5000/api/v1
+VITE_API_BASE_URL=/api/v1
 VITE_APP_TITLE=PaperSystem 管理后台
 ```
 
