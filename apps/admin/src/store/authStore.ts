@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { AuthState } from '@/core/types/auth.types'
 import type { User } from '@/core/types/entities'
+import { STORAGE_KEYS } from '@/core/constants/storage-keys'
 
 interface AuthStore extends AuthState {
   login: (token: string, refreshToken: string, expiresAt: string, user: User) => void
@@ -54,7 +55,7 @@ export const useAuthStore = create<AuthStore>()(
         })),
     }),
     {
-      name: 'admin-auth-storage',
+      name: STORAGE_KEYS.TOKEN,
       partialize: (state) => ({
         token: state.token,
         refreshToken: state.refreshToken,

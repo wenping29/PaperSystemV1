@@ -3,6 +3,7 @@ import { message } from 'antd'
 import { appConfig } from '@/core/config/app.config'
 import { STORAGE_KEYS } from '@/core/constants/storage-keys'
 import { ROUTES } from '@/core/constants/routes'
+import { useAuthStore } from '@/store/authStore'
 
 // 创建axios实例
 const axiosInstance: AxiosInstance = axios.create({
@@ -17,7 +18,9 @@ const axiosInstance: AxiosInstance = axios.create({
 // 请求拦截器
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const token = localStorage.getItem(STORAGE_KEYS.TOKEN)
+    const { token } = useAuthStore.getState()
+    //const token = localStorage.getItem(STORAGE_KEYS.TOKEN)
+    //console.log('请求拦截器 - 当前Token:', token)
 
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`
