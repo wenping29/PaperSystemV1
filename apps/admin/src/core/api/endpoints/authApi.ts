@@ -4,9 +4,9 @@ import type { AuthResponse, LoginRequest, RefreshTokenRequest } from '@/core/typ
 
 export const authApi = {
   // 登录
-  login: async (credentials: LoginRequest): Promise<ApiResponse<AuthResponse>> => {
+  login: async (credentials: LoginRequest): Promise<ApiResponse> => {
     const response = await axiosInstance.post<ApiResponse<AuthResponse>>('/auth/login', credentials)
-    return response.data
+    return response
   },
 
   // 注册
