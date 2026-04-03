@@ -23,7 +23,7 @@ const LoginPage: React.FC = () => {
   const onFinish = async (values: LoginFormValues) => {
     setLoading(true)
     try {
-      console.log('Login form values:', values)
+      //console.log('Login form values:', values)
       values = { 
         username: "admin",
         password: "Admin@123"

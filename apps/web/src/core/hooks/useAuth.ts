@@ -14,7 +14,7 @@ export const useAuth = () => {
     authState.user?.id ? parseInt(authState.user.id) : 0,
     { skip: !authState.user?.id }
   )
-  console.log(profile);
+  //console.log(profile);
 
   useEffect(() => {
     if (profile) {
