@@ -43,9 +43,24 @@ export default defineConfig({
     port: 3001,
     open: true,
     proxy: {
-      '/api': {
+      '/api/v1/auth': {
         target: 'http://localhost:5000',
         changeOrigin: true,
+      },
+      '/api/v1/users': {
+        target: 'http://localhost:5000',  // 认证后端
+        changeOrigin: true,
+        secure: false,
+      },
+      '/api/v1/activity-logs': {
+        target: 'http://localhost:5000',  // 认证后端
+        changeOrigin: true,
+        secure: false,
+      },
+      '/api/v1/works': {
+        target: 'http://localhost:5001',  // 认证后端
+        changeOrigin: true,
+        secure: false,
       },
     },
   },
