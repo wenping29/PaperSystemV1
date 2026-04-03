@@ -30,7 +30,7 @@ namespace FriendshipService.Services
             _configuration = configuration;
             _httpClient = httpClient;
 
-            _userServiceUrl = _configuration["ServiceUrls:UserService"] ?? "http://localhost:5000";
+            _userServiceUrl = _configuration["ServiceUrls:UserService"];
         }
 
         public async Task<FriendshipDTO?> GetFriendshipByIdAsync(long id)
