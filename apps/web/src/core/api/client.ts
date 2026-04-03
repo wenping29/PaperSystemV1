@@ -5,7 +5,7 @@ import { refreshToken } from '@/store/api/authApi'
 
 // 创建axios实例
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api/v1',
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   timeout: 30000, // 30秒超时
   headers: {
     'Content-Type': 'application/json',

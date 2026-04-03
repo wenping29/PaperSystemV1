@@ -7,7 +7,7 @@ export const APP_CONFIG = {
 
   // API配置
   api: {
-    baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
+    baseURL: import.meta.env.VITE_API_BASE_URL,
     timeout: 30000,
     retryCount: 3,
   },

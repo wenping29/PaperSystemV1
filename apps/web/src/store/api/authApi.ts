@@ -13,13 +13,14 @@ export interface RegisterRequest {
   password: string
 }
 
+// 从环境变量读取（开发环境 = /api，走代理）
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL 
- 
 
 export const authApi = createApi({
   reducerPath: 'authApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: `${API_BASE_URL}/auth`,
+    // 👇 这里正确拼接
+    baseUrl: API_BASE_URL,
     prepareHeaders: (headers) => {
       const token = localStorage.getItem('token')
       if (token) {
@@ -32,7 +33,7 @@ export const authApi = createApi({
   endpoints: (builder) => ({
     login: builder.mutation<LoginResponse, LoginRequest>({
       query: (credentials) => ({
-        url: '/login',
+        url: '/auth/login',
         method: 'POST',
         body: credentials
       }),
@@ -40,25 +41,25 @@ export const authApi = createApi({
     }),
     logout: builder.mutation<void, void>({
       query: () => ({
-        url: '/logout',
+        url: '/auth/logout',
         method: 'POST'
-      }),
-      invalidatesTags: ['User']
+      })
     }),
     register: builder.mutation<void, RegisterRequest>({
       query: (userData) => ({
-        url: '/register',
+        url: '/auth/register',
         method: 'POST',
         body: userData
       })
     }),
-    getProfile: builder.query<UserProfile, void>({
-      query: () => '/profile',
+    // 👇 这里修复！！！把 /2/profile 改成正确路径
+    getProfile: builder.query<UserProfile, number>({
+      query: (id) => `/users/profile/${id}`, // ✅ 修复
       providesTags: ['User']
     }),
     updateProfile: builder.mutation<UserProfile, Partial<UserProfile>>({
       query: (profile) => ({
-        url: '/profile',
+        url: '/auth/profile',
         method: 'PUT',
         body: profile
       }),
@@ -66,7 +67,7 @@ export const authApi = createApi({
     }),
     refreshToken: builder.mutation<{ token: string; refreshToken: string }, void>({
       query: () => ({
-        url: '/refresh',
+        url: '/auth/refresh',
         method: 'POST'
       })
     })
