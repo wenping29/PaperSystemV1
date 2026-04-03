@@ -23,10 +23,7 @@ builder.WebHost.ConfigureKestrel(serverOptions =>
     serverOptions.Limits.MaxConcurrentConnections = 10000;
     serverOptions.Limits.MaxConcurrentUpgradedConnections = 10000;
     serverOptions.Limits.MaxRequestBodySize = 100 * 1024 * 1024; // 100MB
-    serverOptions.ListenAnyIP(5005, listenOptions =>
-    {
-        listenOptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http1AndHttp2AndHttp3;
-    });
+    // 端口配置已移至 appsettings.json 中的 Kestrel 配置
 });
 
 // 2. 依赖注入配置
