@@ -159,10 +159,10 @@ builder.Services.AddCors(options =>
         policy =>
         { 
 
-            policy.WithOrigins("http://localhost:3001")
+            policy.AllowAnyOrigin()
               .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials(); // 支持带Cookie/Token
+              .AllowAnyMethod();
+              //.AllowCredentials(); // 支持带Cookie/Token
         });
 });
 
@@ -193,6 +193,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseResponseCompression();
 app.UseCors("AllowAll");
+app.UseAuthentication();
 app.UseRouting();
 app.UseAuthorization();
 app.MapControllers();
