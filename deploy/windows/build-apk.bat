@@ -5,10 +5,10 @@ echo           Android APK 一键打包脚本 (Release)
 echo ======================================================
 
 :: 安卓项目路径
-set ANDROID_PROJECT=..\..\src\Mobile
+set ANDROID_PROJECT=..\..\apps\Mobile
 
 :: 输出APK目录
-set OUTPUT_DIR=..\..\apk_output
+set OUTPUT_DIR=..\..\apps\apk_output
 
 :: 检查项目是否存在
 if not exist "%ANDROID_PROJECT%" (
