@@ -90,8 +90,9 @@ builder.Services.AddDbContext<WritingDbContext>(options =>
 });
 
 // 5. Redis分布式缓存
+var redisEnabled = builder.Configuration.GetValue<bool>("Redis:Enabled", true);
 var redisConfiguration = builder.Configuration.GetConnectionString("Redis");
-if (!string.IsNullOrEmpty(redisConfiguration))
+if (redisEnabled && !string.IsNullOrEmpty(redisConfiguration))
 {
     builder.Services.AddStackExchangeRedisCache(options =>
     {
