@@ -72,15 +72,20 @@ echo.
 
 :: 创建目录
 plink -batch -pw %LINUX_PWD% %SERVER% "mkdir -p %LINUX_DEPLOY_PATH%" 2>nul
-
+echo 完成创建目录：%LINUX_DEPLOY_PATH%
 :: 上传并授权
 for /d %%s in ("%OUT_DIR%\*") do (
+    echo ======================================================
+    echo 上传服务：%%~nxs
     set "svcName=%%~nxs"
     set "localPath=%%s\"
     set "remotePath=%LINUX_DEPLOY_PATH%/!svcName!"
 
     echo 上传：!svcName!
+    echo 开始pscp
+
     pscp -batch -pw %LINUX_PWD% -r "!localPath!" %SERVER%:"!remotePath!"
+    echo 开始授权:plink：!svcName!
     plink -batch -pw %LINUX_PWD% %SERVER% "chmod +x %LINUX_DEPLOY_PATH%/!svcName!/!svcName!" 2>nul
     echo ✅ 部署完成：!svcName!
     echo.
