@@ -6,7 +6,7 @@ echo ======================================================
 
 set SERVER=root@8.136.202.27
 set DEST=/www/wwwroot/PaperServer
-set LOCAL_PUBLISH=..\..\src\Publish
+set LOCAL_PUBLISH=src\Publish
 
 echo 正在上传所有服务...
 echo.

@@ -1,6 +1,6 @@
 @echo off
 chcp 65001
-cd../../src/Web
+cd apps/admin
 npm install
 npm run build
 echo.

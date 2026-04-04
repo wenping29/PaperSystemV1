@@ -1,56 +1,71 @@
 @echo off
-chcp 65001
+setlocal enabledelayedexpansion
+chcp 65001 >nul
+color 0A
+title PaperSystem 微服务 一键批量打包
+
 echo ======================================================
 echo          PaperSystem 微服务 一键批量打包
 echo              Linux-x64 独立无依赖版
 echo ======================================================
+echo.
 
-:: 基础配置（不用改）
+:: ===================== 基础配置 =====================
 set "CONFIG=Release"
 set "RUNTIME=linux-x64"
-set "SRC_DIR=..\..\src\Services"
-set "OUT_DIR=..\..\src\Publish"
+set "SRC_DIR=.\src\Services"
+set "OUT_DIR=.\src\Publish"
+:: ====================================================
 
-:: 检查服务目录是否存在
+:: 检查服务目录
 if not exist "%SRC_DIR%" (
-    echo 错误：服务目录不存在 %SRC_DIR%
+    echo [错误] 服务目录不存在：%SRC_DIR%
     pause
     exit /b 1
 )
 
-echo 正在打包所有微服务...
+:: 自动创建输出根目录
+if not exist "%OUT_DIR%" mkdir "%OUT_DIR%"
+
+echo [开始] 正在批量打包所有微服务...
 echo.
 
-:: 遍历所有子目录（每个子目录=一个微服务）
+:: 遍历服务（已修复路径拼接错误）
 for /d %%s in ("%SRC_DIR%\*") do (
-    set "SERVICE_NAME=%%~nxs"
-    set "CSPROJ=%%s\%%~nxs.csproj"
-    set "OUT_PATH=%OUT_DIR%\%%~nxs"
+    set "svcName=%%~nxs"
+    set "projPath=%%s\!svcName!.csproj"
+    set "outPath=%OUT_DIR%\!svcName!"
 
-    if exist "%%s\%%~nxs.csproj" (
+    if exist "!projPath!" (
         echo ======================================================
-        echo 打包服务：%%~nxs
-        echo 项目文件：%%~nxs.csproj
-        echo 输出目录：!OUT_PATH!
+        echo 服务名：!svcName!
+        echo 项目：!projPath!
+        echo 输出：!outPath!
         echo ======================================================
 
-        dotnet publish "%%s\%%~nxs.csproj" ^
+        dotnet publish "!projPath!" ^
             -c %CONFIG% ^
             -r %RUNTIME% ^
             --self-contained true ^
             /p:PublishSingleFile=true ^
             /p:IncludeNativeLibrariesForSelfExtract=true ^
             /p:DebugType=None ^
-            -o "!OUT_PATH!"
+            /p:DebugSymbols=false ^
+            -o "!outPath!"
 
         echo.
-        echo ✅ 打包完成：%%~nxs
+        if !errorlevel! equ 0 (
+            echo ✅ 打包成功：!svcName!
+        ) else (
+            echo ❌ 打包失败：!svcName!
+        )
         echo.
     )
 )
 
 echo ======================================================
-echo 🎉 所有微服务打包完成！
-echo 输出路径：%OUT_DIR%
+echo 🎉 所有服务打包完成
+echo 输出根目录：%OUT_DIR%
 echo ======================================================
+echo.
 pause
