@@ -19,53 +19,13 @@ var builder = WebApplication.CreateBuilder(args);
 // 1. 配置Kestrel服务器
 builder.ConfigureKestrelServer();
 
-// 2. 依赖注入配置
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-    });
+// 2. 配置通用Web应用程序服务
+builder.Services.AddWebApplicationServices(
+    builder.Configuration,
+    serviceName: "Writing Platform Search Service API",
+    serviceDescription: "搜索服务API");
 
-// 3. Swagger配置
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
-    {
-        Title = "Writing Platform Search Service API",
-        Version = "v1",
-        Description = "搜索服务API"
-    });
-
-    // 添加JWT认证支持
-    options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-    {
-        Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-        Name = "Authorization",
-        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-        Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
-        Scheme = "Bearer"
-    });
-
-    options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
-    {
-        {
-            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-            {
-                Reference = new Microsoft.OpenApi.Models.OpenApiReference
-                {
-                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            Array.Empty<string>()
-        }
-    });
-});
-
-// 4. 数据库上下文配置
+// 3. 数据库上下文配置
 builder.Services.AddDbContext<SearchDbContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("SearchDatabase");
@@ -87,44 +47,7 @@ builder.Services.AddDbContext<SearchDbContext>(options =>
     }
 });
 
-// 5. JWT认证配置
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration["Jwt:Issuer"] ?? "WritingPlatform",
-        ValidAudience = builder.Configuration["Jwt:Audience"] ?? "WritingPlatformUsers",
-        IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(
-            System.Text.Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? "YourSuperSecretKeyForJWTTokenGenerationAtLeast32Characters"))
-    };
-});
-
-// 6. Redis分布式缓存
-var redisEnabled = builder.Configuration.GetValue<bool>("Redis:Enabled", true);
-var redisConfiguration = builder.Configuration.GetConnectionString("Redis");
-if (redisEnabled && !string.IsNullOrEmpty(redisConfiguration))
-{
-    builder.Services.AddStackExchangeRedisCache(options =>
-    {
-        options.Configuration = redisConfiguration;
-        options.InstanceName = "WritingPlatform:SearchService:";
-    });
-
-    // 注册IConnectionMultiplexer用于Redis高级操作
-    builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
-        ConnectionMultiplexer.Connect(redisConfiguration));
-}
-
-// 7. 响应压缩
+// 4. 响应压缩（共享基础设施中暂时注释掉，此处保留）
 builder.Services.AddResponseCompression(options =>
 {
     options.EnableForHttps = true;
@@ -132,23 +55,9 @@ builder.Services.AddResponseCompression(options =>
     options.Providers.Add<Microsoft.AspNetCore.ResponseCompression.GzipCompressionProvider>();
 });
 
-// 8. 健康检查
-builder.Services.AddHealthChecks();
-
-// 9. AutoMapper
+// 5. AutoMapper
 builder.Services.AddAutoMapper(typeof(Program));
-
-// 10. CORS策略
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll",
-        policy =>
-        {
-            policy.AllowAnyOrigin()
-                  .AllowAnyMethod()
-                  .AllowAnyHeader();
-        });
-});
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 // 11. HttpClient用于调用其他服务
 builder.Services.AddHttpClient("search", client =>
