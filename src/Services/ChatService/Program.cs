@@ -12,28 +12,20 @@ using ChatService.Repositories;
 using ChatService.Services;
 using ChatService.Extensions;
 using ChatService.Interfaces;
+using Shared.Infrastructure;
 // using Microsoft.AspNetCore.SignalR;
 // using ChatService.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. 性能优化配置
-builder.WebHost.ConfigureKestrel(serverOptions =>
-{
-    serverOptions.Limits.MaxConcurrentConnections = 10000;
-    serverOptions.Limits.MaxConcurrentUpgradedConnections = 10000;
-    serverOptions.Limits.MaxRequestBodySize = 100 * 1024 * 1024; // 100MB
-    // 端口配置已移至 appsettings.json 中的 Kestrel 配置
-});
+// 1. 配置Kestrel服务器
+builder.ConfigureKestrelServer();
 
-// 2. 依赖注入配置
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-    });
+// 2. 配置通用Web应用程序服务
+builder.Services.AddWebApplicationServices(
+    builder.Configuration,
+    serviceName: "Writing Platform Chat Service API",
+    serviceDescription: "聊天服务API");
 
 // 3. SignalR配置（实时聊天）- 暂时注释掉，因为包版本问题
 // builder.Services.AddSignalR(options =>
@@ -42,44 +34,7 @@ builder.Services.AddControllers()
 //     options.MaximumReceiveMessageSize = 1024 * 1024; // 1MB
 // });
 
-// 4. Swagger配置
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
-    {
-        Title = "Writing Platform Chat Service API",
-        Version = "v1",
-        Description = "聊天服务API"
-    });
-
-    // 添加JWT认证支持
-    options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-    {
-        Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-        Name = "Authorization",
-        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-        Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
-        Scheme = "Bearer"
-    });
-
-    options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
-    {
-        {
-            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-            {
-                Reference = new Microsoft.OpenApi.Models.OpenApiReference
-                {
-                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            Array.Empty<string>()
-        }
-    });
-});
-
-// 5. 数据库上下文配置
+// 4. 数据库上下文配置
 builder.Services.AddDbContext<ChatDbContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("ChatDatabase");
@@ -101,59 +56,7 @@ builder.Services.AddDbContext<ChatDbContext>(options =>
     }
 });
 
-// 6. JWT认证配置
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration["Jwt:Issuer"] ?? "WritingPlatform",
-        ValidAudience = builder.Configuration["Jwt:Audience"] ?? "WritingPlatformUsers",
-        IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(
-            System.Text.Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? "YourSuperSecretKeyForJWTTokenGenerationAtLeast32Characters"))
-    };
-
-    // SignalR JWT支持 - 暂时注释掉
-    // options.Events = new Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerEvents
-    // {
-    //     OnMessageReceived = context =>
-    //     {
-    //         var accessToken = context.Request.Query["access_token"];
-    //         var path = context.HttpContext.Request.Path;
-    //         if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/chatHub"))
-    //         {
-    //             context.Token = accessToken;
-    //         }
-    //         return Task.CompletedTask;
-    //     }
-    // };
-});
-
-// 7. Redis分布式缓存
-var redisEnabled = builder.Configuration.GetValue<bool>("Redis:Enabled", true);
-var redisConfiguration = builder.Configuration.GetConnectionString("Redis");
-if (redisEnabled && !string.IsNullOrEmpty(redisConfiguration))
-{
-    builder.Services.AddStackExchangeRedisCache(options =>
-    {
-        options.Configuration = redisConfiguration;
-        options.InstanceName = "WritingPlatform:ChatService:";
-    });
-
-    // 注册IConnectionMultiplexer用于Redis高级操作
-    builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
-        ConnectionMultiplexer.Connect(redisConfiguration));
-}
-
-// 8. 响应压缩
+// 5. 响应压缩
 builder.Services.AddResponseCompression(options =>
 {
     options.EnableForHttps = true;
@@ -161,14 +64,15 @@ builder.Services.AddResponseCompression(options =>
     options.Providers.Add<Microsoft.AspNetCore.ResponseCompression.GzipCompressionProvider>();
 });
 
-// 9. 健康检查（数据库健康检查需要EF Core）
+// 6. 健康检查（数据库健康检查需要EF Core）
 builder.Services.AddHealthChecks()
     .AddDbContextCheck<ChatDbContext>("ChatDatabase", tags: new[] { "ready" });
 
-// 10. AutoMapper
+// 7. AutoMapper
 builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
-// 11. CORS策略
+// 8. CORS策略（覆盖共享基础设施的AllowAll策略）
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
@@ -193,69 +97,13 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 var app = builder.Build();
 
-// 配置中间件管道
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI(options =>
-    {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "Chat Service API v1");
-        options.RoutePrefix = "api-docs";
-    });
-
-    app.UseDeveloperExceptionPage();
-}
-
+// 响应压缩（共享基础设施中暂时注释掉，此处保留）
 app.UseResponseCompression();
-app.UseCors("AllowAll");
-app.UseRouting();
-app.UseAuthentication();
-app.UseAuthorization();
+
+// 配置中间件管道
+app.ConfigureWebApplicationPipeline(app.Environment, apiDocsPath: "api-docs");
 
 // SignalR Hub端点 - 暂时注释掉
 // app.MapHub<ChatHub>("/chatHub");
-
-app.MapControllers();
-
-// 健康检查端点
-app.MapHealthChecks("/health", new HealthCheckOptions
-{
-    Predicate = _ => true,
-    ResponseWriter = async (context, report) =>
-    {
-        context.Response.ContentType = "application/json";
-        var response = new
-        {
-            status = report.Status.ToString(),
-            checks = report.Entries.Select(e => new
-            {
-                name = e.Key,
-                status = e.Value.Status.ToString(),
-                duration = e.Value.Duration.TotalMilliseconds,
-                exception = e.Value.Exception?.Message
-            }),
-            totalDuration = report.TotalDuration.TotalMilliseconds
-        };
-
-        await context.Response.WriteAsync(JsonSerializer.Serialize(response, new JsonSerializerOptions
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            WriteIndented = true
-        }));
-    }
-});
-
-app.MapHealthChecks("/health/ready", new HealthCheckOptions
-{
-    Predicate = check => check.Tags.Contains("ready")
-});
-
-app.MapHealthChecks("/health/live", new HealthCheckOptions
-{
-    Predicate = _ => false
-});
-
-// 根路径重定向到Swagger
-app.MapGet("/", () => Results.Redirect("/api-docs"));
 
 app.Run();

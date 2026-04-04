@@ -12,17 +12,12 @@ using SearchService.Repositories;
 using SearchService.Services;
 using SearchService.Extensions;
 using SearchService.Interfaces;
+using Shared.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. 性能优化配置
-builder.WebHost.ConfigureKestrel(serverOptions =>
-{
-    serverOptions.Limits.MaxConcurrentConnections = 10000;
-    serverOptions.Limits.MaxConcurrentUpgradedConnections = 10000;
-    serverOptions.Limits.MaxRequestBodySize = 100 * 1024 * 1024; // 100MB
-    // 端口配置已移至 appsettings.json 中的 Kestrel 配置
-});
+// 1. 配置Kestrel服务器
+builder.ConfigureKestrelServer();
 
 // 2. 依赖注入配置
 builder.Services.AddControllers()
