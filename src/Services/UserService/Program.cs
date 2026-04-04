@@ -22,10 +22,7 @@ builder.WebHost.ConfigureKestrel(serverOptions =>
     serverOptions.Limits.MaxConcurrentConnections = 10000;
     serverOptions.Limits.MaxConcurrentUpgradedConnections = 10000;
     serverOptions.Limits.MaxRequestBodySize = 100 * 1024 * 1024; // 100MB
-    serverOptions.ListenAnyIP(5000, listenOptions =>
-    {
-        listenOptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http1AndHttp2AndHttp3;
-    });
+    // 端口配置已移至 appsettings.json 中的 Kestrel 配置
 });
 
 // 2. 依赖注入配置
@@ -119,8 +116,9 @@ builder.Services.AddAuthentication(options =>
 });
 
 // 6. Redis分布式缓存
+var redisEnabled = builder.Configuration.GetValue<bool>("Redis:Enabled", true);
 var redisConfiguration = builder.Configuration.GetConnectionString("Redis");
-if (!string.IsNullOrEmpty(redisConfiguration))
+if (redisEnabled && !string.IsNullOrEmpty(redisConfiguration))
 {
     builder.Services.AddStackExchangeRedisCache(options =>
     {
@@ -159,10 +157,10 @@ builder.Services.AddCors(options =>
         policy =>
         { 
 
-            policy.WithOrigins("http://localhost:3001")
+            policy.AllowAnyOrigin()
               .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials(); // 支持带Cookie/Token
+              .AllowAnyMethod();
+              //.AllowCredentials(); // 支持带Cookie/Token
         });
 });
 
@@ -193,6 +191,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseResponseCompression();
 app.UseCors("AllowAll");
+app.UseAuthentication();
 app.UseRouting();
 app.UseAuthorization();
 app.MapControllers();
