@@ -1,0 +1,14 @@
+[Unit]
+Description=PaperSystem 微服务
+After=network.target redis-server.service
+
+[Service]
+Type=forking
+User=root
+WorkingDirectory=/www/wwwroot/PaperServer
+ExecStart=/www/wwwroot/PaperServer/start-all.sh
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
