@@ -151,6 +151,12 @@ if (redisEnabled && !string.IsNullOrEmpty(redisConfiguration))
     // 注册IConnectionMultiplexer用于Redis高级操作
     builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
         ConnectionMultiplexer.Connect(redisConfiguration));
+} else {
+    // 👇 关键修复：Redis 关闭时，自动使用内存分布式缓存
+    builder.Services.AddDistributedMemoryCache();
+
+     // 👇 关键修复：关闭 Redis 时，注册一个空对象（避免报错）
+    builder.Services.AddSingleton<IConnectionMultiplexer>(_ => null);
 }
 
 // 8. 响应压缩
@@ -174,10 +180,10 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAll",
         policy =>
         {
-            policy.WithOrigins("http://localhost:3001")
-           .AllowAnyHeader()
-           .AllowAnyMethod()
-           .AllowCredentials(); // 支持带Cookie/Token
+            policy.AllowAnyOrigin()
+               .AllowAnyHeader()
+               .AllowAnyMethod();
+            // .AllowCredentials(); // 支持带Cookie/Token
         }
         );
 });

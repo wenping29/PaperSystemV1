@@ -37,7 +37,8 @@
       "Bash(\"d:\\\\Project\\\\paperSystem\\\\DATABASE_SETUP.md\")",
       "Bash(ls -la *.sln)",
       "Bash(ls -la *.json *.yml *.yaml *.xml *.ini)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(find \"D:\\\\Project\\\\PaperSystemV1\\\\src\\\\Shared\" -type f -name \"*.cs\" -exec grep -l \"Exception\\\\|Error\\\\|Problem\" {} \\\\;)"
     ]
   }
 }

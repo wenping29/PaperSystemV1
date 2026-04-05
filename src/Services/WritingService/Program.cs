@@ -107,6 +107,18 @@ if (redisEnabled && !string.IsNullOrEmpty(redisConfiguration))
         failureStatus: HealthStatus.Degraded,
         timeout: TimeSpan.FromSeconds(5),
         tags: null);
+
+    // 注册IConnectionMultiplexer用于Redis高级操作
+    builder.Services.AddSingleton<StackExchange.Redis.IConnectionMultiplexer>(sp =>
+        StackExchange.Redis.ConnectionMultiplexer.Connect(redisConfiguration));
+}
+else
+{
+    // 👇 关键修复：Redis 关闭时，自动使用内存分布式缓存
+    builder.Services.AddDistributedMemoryCache();
+
+    // 👇 关键修复：关闭 Redis 时，注册一个空对象（避免报错）
+    builder.Services.AddSingleton<StackExchange.Redis.IConnectionMultiplexer>(_ => null);
 }
 
 // 6. 响应压缩
