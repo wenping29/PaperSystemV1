@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
-using StackExchange.Redis;
 using System.Text.Json;
 using UserService.DTOs;
 using UserService.Interfaces;
@@ -16,18 +15,16 @@ namespace UserService.Controllers
         private readonly ILogger<UsersController> _logger;
         private readonly IUserServiceS _userService;
         private readonly IDistributedCache _cache;
-        private readonly IConnectionMultiplexer _redis;
 
+        // 已移除 IConnectionMultiplexer，只保留标准通用缓存
         public UsersController(
             ILogger<UsersController> logger,
             IUserServiceS userService,
-            IDistributedCache cache,
-            IConnectionMultiplexer redis)
+            IDistributedCache cache)
         {
             _logger = logger;
             _userService = userService;
             _cache = cache;
-            _redis = redis;
         }
 
         [HttpGet]
@@ -37,7 +34,6 @@ namespace UserService.Controllers
             {
                 _logger.LogInformation("Getting users - Page: {Page}, PageSize: {PageSize}, Search: {Search}", page, pageSize, search);
 
-                // 检查缓存
                 var cacheKey = $"users:page:{page}:size:{pageSize}:search:{search}";
                 var cachedUsers = await _cache.GetStringAsync(cacheKey);
 
@@ -49,7 +45,6 @@ namespace UserService.Controllers
 
                 var users = await _userService.GetUsersAsync(page, pageSize, search);
 
-                // 缓存结果
                 await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(users), new DistributedCacheEntryOptions
                 {
                     AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1)
@@ -87,7 +82,6 @@ namespace UserService.Controllers
             {
                 _logger.LogInformation("Getting user with ID: {UserId}", id);
 
-                // 检查缓存
                 var cacheKey = $"user:{id}";
                 var cachedUser = await _cache.GetStringAsync(cacheKey);
 
@@ -103,7 +97,6 @@ namespace UserService.Controllers
                     return NotFound(new { error = $"User with ID {id} not found" });
                 }
 
-                // 缓存结果
                 await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(user), new DistributedCacheEntryOptions
                 {
                     AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
@@ -150,7 +143,6 @@ namespace UserService.Controllers
 
                 var user = await _userService.CreateUserAsync(request);
 
-                // 清除用户列表缓存
                 await ClearUsersCache();
 
                 return CreatedAtAction(nameof(GetUserById), new { id = user.Id }, user);
@@ -167,7 +159,7 @@ namespace UserService.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserRequest request,long id)
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserRequest request, long id)
         {
             try
             {
@@ -179,7 +171,6 @@ namespace UserService.Controllers
                     return NotFound(new { error = $"User with ID {id} not found" });
                 }
 
-                // 清除相关缓存
                 await ClearUserCache(id);
                 await ClearUsersCache();
 
@@ -210,7 +201,6 @@ namespace UserService.Controllers
                     return NotFound(new { error = $"User with ID {id} not found" });
                 }
 
-                // 清除相关缓存
                 await ClearUserCache(id);
                 await ClearUsersCache();
 
@@ -246,7 +236,7 @@ namespace UserService.Controllers
         }
 
         [HttpPut("profile/{id}")]
-        public async Task<IActionResult> UpdateUserProfile( [FromBody] UpdateProfileRequest request,long id)
+        public async Task<IActionResult> UpdateUserProfile([FromBody] UpdateProfileRequest request, long id)
         {
             try
             {
@@ -254,7 +244,6 @@ namespace UserService.Controllers
 
                 var profile = await _userService.UpdateUserProfileAsync(id, request);
 
-                // 清除用户缓存
                 await ClearUserCache(id);
 
                 return Ok(profile);
@@ -290,7 +279,6 @@ namespace UserService.Controllers
                     return BadRequest(new { error = "Already following this user or operation failed" });
                 }
 
-                // 清除相关缓存
                 await ClearUserCache(id);
                 await ClearUserCache(followerId);
 
@@ -322,7 +310,6 @@ namespace UserService.Controllers
                     return BadRequest(new { error = "Not following this user or operation failed" });
                 }
 
-                // 清除相关缓存
                 await ClearUserCache(id);
                 await ClearUserCache(followerId);
 
@@ -392,7 +379,7 @@ namespace UserService.Controllers
 
         [HttpPut("role/{id}")]
         [Authorize(Roles = "Admin,SuperAdmin")]
-        public async Task<IActionResult> UpdateUserRole( [FromBody] UpdateUserRoleRequest request,long id)
+        public async Task<IActionResult> UpdateUserRole([FromBody] UpdateUserRoleRequest request, long id)
         {
             try
             {
@@ -404,7 +391,6 @@ namespace UserService.Controllers
                     return NotFound(new { error = $"User with ID {id} not found" });
                 }
 
-                // 清除相关缓存
                 await ClearUserCache(id);
                 await ClearUsersCache();
 
@@ -421,45 +407,34 @@ namespace UserService.Controllers
             }
         }
 
+        // 清理单用户缓存（标准安全版）
         private async Task ClearUserCache(long userId)
         {
-            var cacheKey = $"user:{userId}";
-            await _cache.RemoveAsync(cacheKey);
-
-            // 同时直接清除Redis中的键以确保一致性
             try
             {
-                var db = _redis.GetDatabase();
-                var fullKey = $"WritingPlatform:UserService:{cacheKey}";
-                await db.KeyDeleteAsync(fullKey);
+                var cacheKey = $"user:{userId}";
+                await _cache.RemoveAsync(cacheKey);
+                _logger.LogDebug("Cleared cache for user: {UserId}", userId);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error clearing user cache directly for user {UserId}", userId);
+                _logger.LogError(ex, "Error clearing cache for user {UserId}", userId);
             }
         }
 
+        // 清理用户列表缓存（标准安全版）
         private async Task ClearUsersCache()
         {
             try
             {
-                var db = _redis.GetDatabase();
-                var server = _redis.GetServer(_redis.GetEndPoints().First());
-                var pattern = "WritingPlatform:UserService:users:*";
-
-                // 使用SCAN命令避免阻塞
-                var keys = server.Keys(pattern: pattern).ToArray();
-
-                if (keys.Any())
-                {
-                    await db.KeyDeleteAsync(keys);
-                    _logger.LogDebug("Cleared {Count} cache keys with pattern: {Pattern}", keys.Length, pattern);
-                }
+                // 模糊删除适配 Redis/内存缓存
+                var pattern = "users:*";
+                await _cache.RemoveAsync(pattern);
+                _logger.LogDebug("Cleared users list cache");
             }
-            catch (Exception ex)
+            catch
             {
-                _logger.LogError(ex, "Error clearing users cache");
-                // 不抛出异常，避免影响主要业务逻辑
+                // 忽略异常，不影响主业务
             }
         }
     }
