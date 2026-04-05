@@ -12,20 +12,65 @@ using SearchService.Repositories;
 using SearchService.Services;
 using SearchService.Extensions;
 using SearchService.Interfaces;
-using Shared.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. 配置Kestrel服务器
-builder.ConfigureKestrelServer();
+// 1. 性能优化配置
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.Limits.MaxConcurrentConnections = 10000;
+    serverOptions.Limits.MaxConcurrentUpgradedConnections = 10000;
+    serverOptions.Limits.MaxRequestBodySize = 100 * 1024 * 1024; // 100MB
+    // 端口配置已移至 appsettings.json 中的 Kestrel 配置
+});
 
-// 2. 配置通用Web应用程序服务
-builder.Services.AddWebApplicationServices(
-    builder.Configuration,
-    serviceName: "Writing Platform Search Service API",
-    serviceDescription: "搜索服务API");
+// 2. 依赖注入配置
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    });
 
-// 3. 数据库上下文配置
+// 3. Swagger配置
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "Writing Platform Search Service API",
+        Version = "v1",
+        Description = "搜索服务API"
+    });
+
+    // 添加JWT认证支持
+    options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+        Name = "Authorization",
+        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+        Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+
+    options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+    {
+        {
+            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            {
+                Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                {
+                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
+
+// 4. 数据库上下文配置
 builder.Services.AddDbContext<SearchDbContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("SearchDatabase");
@@ -47,7 +92,44 @@ builder.Services.AddDbContext<SearchDbContext>(options =>
     }
 });
 
-// 4. 响应压缩（共享基础设施中暂时注释掉，此处保留）
+// 5. JWT认证配置
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"] ?? "WritingPlatform",
+        ValidAudience = builder.Configuration["Jwt:Audience"] ?? "WritingPlatformUsers",
+        IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(
+            System.Text.Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? "YourSuperSecretKeyForJWTTokenGenerationAtLeast32Characters"))
+    };
+});
+
+// 6. Redis分布式缓存
+var redisEnabled = builder.Configuration.GetValue<bool>("Redis:Enabled", true);
+var redisConfiguration = builder.Configuration.GetConnectionString("Redis");
+if (redisEnabled && !string.IsNullOrEmpty(redisConfiguration))
+{
+    builder.Services.AddStackExchangeRedisCache(options =>
+    {
+        options.Configuration = redisConfiguration;
+        options.InstanceName = "WritingPlatform:SearchService:";
+    });
+
+    // 注册IConnectionMultiplexer用于Redis高级操作
+    builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+        ConnectionMultiplexer.Connect(redisConfiguration));
+}
+
+// 7. 响应压缩
 builder.Services.AddResponseCompression(options =>
 {
     options.EnableForHttps = true;
@@ -55,9 +137,23 @@ builder.Services.AddResponseCompression(options =>
     options.Providers.Add<Microsoft.AspNetCore.ResponseCompression.GzipCompressionProvider>();
 });
 
-// 5. AutoMapper
+// 8. 健康检查
+builder.Services.AddHealthChecks();
+
+// 9. AutoMapper
 builder.Services.AddAutoMapper(typeof(Program));
-builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+// 10. CORS策略
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        });
+});
 
 // 11. HttpClient用于调用其他服务
 builder.Services.AddHttpClient("search", client =>
