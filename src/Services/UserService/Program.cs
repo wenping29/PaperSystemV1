@@ -130,17 +130,14 @@ if (redisEnabled && !string.IsNullOrEmpty(redisConfiguration))
     builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
         ConnectionMultiplexer.Connect(redisConfiguration));
 }else
-{
-    // 👇 关键修复：Redis 关闭时，自动使用内存分布式缓存
+{ 
+    // 👇 关键修复：Redis关闭时，自动注册内存分布式缓存（保证IDistributedCache一定存在）
     builder.Services.AddDistributedMemoryCache();
 
      // 👇 关键修复：关闭 Redis 时，注册一个空对象（避免报错）
     builder.Services.AddSingleton<IConnectionMultiplexer>(_ => null);
-}
-else
-{
-    // 👇 关键修复：Redis关闭时，自动注册内存分布式缓存（保证IDistributedCache一定存在）
-    builder.Services.AddDistributedMemoryCache();
+ 
+
 }
 
 // 6. 响应压缩

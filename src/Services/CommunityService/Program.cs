@@ -73,7 +73,7 @@ builder.Services.AddSwaggerGen(options =>
 // 4. 数据库上下文配置
 builder.Services.AddDbContext<CommunityDbContext>(options =>
 {
-    var connectionString = builder.Configuration.GetConnectionString("CommunityDatabase");
+    var connectionString = builder.Configuration.GetConnectionString("CommunityService");
     if (!string.IsNullOrEmpty(connectionString))
     {
         options.UseMySql(
@@ -109,7 +109,7 @@ builder.Services.AddAuthentication(options =>
         ValidIssuer = builder.Configuration["Jwt:Issuer"] ?? "WritingPlatform",
         ValidAudience = builder.Configuration["Jwt:Audience"] ?? "WritingPlatformUsers",
         IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(
-            System.Text.Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? "YourSuperSecretKeyForJWTTokenGenerationAtLeast32Characters"))
+            System.Text.Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"] ?? "YourSuperSecretKeyForJWTTokenGenerationAtLeast32Characters"))
     };
 });
 
