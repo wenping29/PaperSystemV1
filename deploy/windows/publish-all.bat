@@ -13,8 +13,8 @@ echo.
 :: ===================== 基础配置 =====================
 set "CONFIG=Release"
 set "RUNTIME=linux-x64"
-set "SRC_DIR=.\src\Services"
-set "OUT_DIR=.\src\Publish"
+set "SRC_DIR=..\..\src\Services"
+set "OUT_DIR=..\..\src\Publish"
 :: ====================================================
 
 :: 检查服务目录
