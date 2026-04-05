@@ -126,13 +126,14 @@ if (redisEnabled && !string.IsNullOrEmpty(redisConfiguration))
         options.InstanceName = "UserService:";
     });
 
-    // 添加Redis健康检查（需要Microsoft.Extensions.Diagnostics.HealthChecks.Redis包）
-    // builder.Services.AddHealthChecks()
-    //     .AddRedis(redisConfiguration, "Redis", HealthStatus.Degraded, timeout: TimeSpan.FromSeconds(5));
-
     // 注册IConnectionMultiplexer用于Redis高级操作
     builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
         ConnectionMultiplexer.Connect(redisConfiguration));
+}
+else
+{
+    // 👇 关键修复：Redis关闭时，自动注册内存分布式缓存（保证IDistributedCache一定存在）
+    builder.Services.AddDistributedMemoryCache();
 }
 
 // 6. 响应压缩
