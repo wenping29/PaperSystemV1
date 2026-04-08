@@ -2,11 +2,11 @@ using AutoMapper;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
-using PaperSystemApi.Writing.DTOs;
-using PaperSystemApi.Writing.Entities;
-using PaperSystemApi.Writing.Interfaces;
+using PaperSystemApi.DTOs;
+using PaperSystemApi.Models;
+using PaperSystemApi.Interfaces;
 
-namespace PaperSystemApi.Writing.Services
+namespace PaperSystemApi.Services
 {
     public class WritingServiceS : IWritingServiceS
     {

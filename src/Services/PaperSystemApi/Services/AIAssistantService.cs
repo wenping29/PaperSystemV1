@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using PaperSystemApi.AI.Clients;
-using PaperSystemApi.AI.DTOs;
-using PaperSystemApi.AI.Entities;
-using PaperSystemApi.AI.Interfaces;
+using PaperSystemApi.Models;
+using PaperSystemApi.DTOs;
+using PaperSystemApi.Interfaces;
 
-namespace PaperSystemApi.AI.Services
+namespace PaperSystemApi.Services
 {
     public class AIAssistantService : IAIAssistantService
     {

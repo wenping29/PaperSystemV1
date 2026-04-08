@@ -1,6 +1,6 @@
-using PaperSystemApi.Writing.DTOs;
+using PaperSystemApi.DTOs;
 
-namespace PaperSystemApi.Writing.Interfaces
+namespace PaperSystemApi.Services
 {
     public interface IWritingServiceS
     {

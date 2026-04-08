@@ -1,9 +1,9 @@
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
-using PaperSystemApi.Chat.Entities;
-using PaperSystemApi.Chat.Interfaces;
+using PaperSystemApi.Models;
+using PaperSystemApi.Interfaces;
 
-namespace PaperSystemApi.Chat.Services
+namespace PaperSystemApi.Services
 {
     public class ChatService : IChatService
     {

@@ -2,12 +2,12 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using PaperSystemApi.File.DTOs;
-using PaperSystemApi.File.Entities;
-using PaperSystemApi.File.Interfaces;
+using PaperSystemApi.DTOs;
+using PaperSystemApi.Models;
+using PaperSystemApi.Interfaces;
 using IOFile = System.IO.File;
 
-namespace PaperSystemApi.File.Services
+namespace PaperSystemApi.Services
 {
     public class FileService : IFileService
     {
