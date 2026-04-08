@@ -1,8 +1,8 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using PaperSystemApi.UserServices.Entities;
+using PaperSystemApi.Models;
 
-namespace PaperSystemApi.UserServices.DTOs
+namespace PaperSystemApi.DTOs
 {
     public class CreateActivityLogRequest
     {

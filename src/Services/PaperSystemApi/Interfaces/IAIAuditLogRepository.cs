@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using PaperSystemApi.AI.Entities;
+using PaperSystemApi.Models;
 
-namespace PaperSystemApi.AI.Interfaces
+namespace PaperSystemApi.Interfaces
 {
     public interface IAIAuditLogRepository
     {

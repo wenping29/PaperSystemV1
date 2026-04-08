@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace PaperSystemApi.Writing.DTOs
+namespace PaperSystemApi.DTOs
 {
     public class CategoryResponse
     {

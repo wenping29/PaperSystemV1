@@ -1,6 +1,6 @@
-using PaperSystemApi.Writing.Entities;
+using PaperSystemApi.Models;
 
-namespace PaperSystemApi.Writing.Interfaces
+namespace PaperSystemApi.Interfaces
 {
     public interface IWritingRepository
     {

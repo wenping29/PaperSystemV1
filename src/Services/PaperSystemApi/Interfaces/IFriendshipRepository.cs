@@ -1,6 +1,6 @@
-using PaperSystemApi.FriendshipServices.Entities;
+using PaperSystemApi.Models;
 
-namespace PaperSystemApi.FriendshipServices.Interfaces
+namespace PaperSystemApi.Interfaces
 {
     public interface IFriendshipRepository
     {

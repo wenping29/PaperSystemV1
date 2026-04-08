@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace PaperSystemApi.AI.DTOs
+namespace PaperSystemApi.DTOs
 {
     public class GrammarCheckRequest
     {

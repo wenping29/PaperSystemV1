@@ -1,6 +1,6 @@
 using AutoMapper;
-using PaperSystemApi.AI.DTOs;
-using PaperSystemApi.AI.Entities;
+using PaperSystemApi.DTOs;
+using PaperSystemApi.Models;
 
 namespace PaperSystemApi.Models
 {

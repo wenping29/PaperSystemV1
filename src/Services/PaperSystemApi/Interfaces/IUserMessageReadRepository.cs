@@ -1,6 +1,6 @@
-using PaperSystemApi.Chat.Entities;
+using PaperSystemApi.Models;
 
-namespace PaperSystemApi.Chat.Interfaces
+namespace PaperSystemApi.Interfaces
 {
     public interface IUserMessageReadRepository
     {

@@ -1,2 +1,2 @@
-global using UserEntity = PaperSystemApi.UserServices.Entities.User;
+global using UserEntity = PaperSystemApi.Models.User;
 global using BaseEntity = PaperSystemApi.BaseEntity;

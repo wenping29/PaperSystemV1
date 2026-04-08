@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using PaperSystemApi.AI.DTOs;
+using PaperSystemApi.DTOs;
 
-namespace PaperSystemApi.AI.Interfaces
+namespace PaperSystemApi.Interfaces
 {
     public interface IAIScoringService
     {

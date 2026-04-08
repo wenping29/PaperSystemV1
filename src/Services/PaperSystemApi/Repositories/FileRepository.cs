@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using PaperSystemApi.File.Data;
-using PaperSystemApi.File.Entities;
-using PaperSystemApi.File.Interfaces;
+using PaperSystemApi.Data;
+using PaperSystemApi.Models;
+using PaperSystemApi.Interfaces;
 
-namespace PaperSystemApi.File.Repositories
+namespace PaperSystemApi.Repositories
 {
     public class FileRepository : IFileRepository
     {

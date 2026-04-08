@@ -1,6 +1,6 @@
 using PaperSystemApi.Models;
 
-namespace PaperSystemApi.Services
+namespace PaperSystemApi.Interfaces
 {
     public interface IChatService
     {

@@ -1,6 +1,6 @@
 using PaperSystemApi.DTOs;
 
-namespace PaperSystemApi.Services
+namespace PaperSystemApi.Interfaces
 {
     public interface IFriendshipService
     {

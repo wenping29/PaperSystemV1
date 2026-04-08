@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using PaperSystemApi.AI.Data;
-using PaperSystemApi.AI.Entities;
-using PaperSystemApi.AI.Interfaces;
+using PaperSystemApi.Data;
+using PaperSystemApi.Models;
+using PaperSystemApi.Interfaces;
 
-namespace PaperSystemApi.AI.Repositories
+namespace PaperSystemApi.Repositories
 {
     public class AIAuditLogRepository : IAIAuditLogRepository
     {

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace PaperSystemApi.UserServices.DTOs
+namespace PaperSystemApi.DTOs
 {
     public class LoginRequest
     {

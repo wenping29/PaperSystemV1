@@ -1,11 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
-using PaperSystemApi.Chat.Data;
-using PaperSystemApi.Chat.Entities;
-using PaperSystemApi.Chat.Interfaces;
+using PaperSystemApi.Data;
+using PaperSystemApi.Models;
+using PaperSystemApi.Interfaces;
 
-namespace PaperSystemApi.Chat.Repositories
+namespace PaperSystemApi.Repositories
 {
     public class ChatRoomRepository : IChatRoomRepository
     {

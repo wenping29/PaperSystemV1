@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace PaperSystemApi.Chat.DTOs
+namespace PaperSystemApi.DTOs
 {
     /// <summary>
     /// 发送消息请求

@@ -1,6 +1,6 @@
-using PaperSystemApi.UserServices.Entities;
+using PaperSystemApi.Models;
 
-namespace PaperSystemApi.UserServices.Interfaces
+namespace PaperSystemApi.Interfaces
 {
     public interface IUserRepository
     {

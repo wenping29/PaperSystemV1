@@ -2,8 +2,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using System.Text.Json;
-using PaperSystemApi.UserServices.DTOs;
-using PaperSystemApi.UserServices.Interfaces;
+using PaperSystemApi.DTOs;
+using PaperSystemApi.Interfaces;
 
 namespace PaperSystemApi.Controllers
 {

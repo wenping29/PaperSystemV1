@@ -8,47 +8,47 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 
 // User Service
-using PaperSystemApi.UserServices.Data;
-using PaperSystemApi.UserServices.Entities;
-using PaperSystemApi.UserServices.Repositories;
-using PaperSystemApi.UserServices.Services;
-using PaperSystemApi.UserServices.Helpers;
-using PaperSystemApi.UserServices.Interfaces;
+using PaperSystemApi.Data;
+using PaperSystemApi.Models;
+using PaperSystemApi.Repositories;
+using PaperSystemApi.Services;
+using PaperSystemApi.Models;
+using PaperSystemApi.Interfaces;
 
 // Writing Service
-using PaperSystemApi.Writing.Data;
-using PaperSystemApi.Writing.Entities;
-using PaperSystemApi.Writing.Repositories;
-using PaperSystemApi.Writing.Interfaces;
-using PaperSystemApi.Writing.Services;
+using PaperSystemApi.Data;
+using PaperSystemApi.Models;
+using PaperSystemApi.Repositories;
+using PaperSystemApi.Interfaces;
+using PaperSystemApi.Services;
 
 // Chat Service
-using PaperSystemApi.Chat.Data;
-using PaperSystemApi.Chat.Entities;
-using PaperSystemApi.Chat.Repositories;
-using PaperSystemApi.Chat.Interfaces;
-using PaperSystemApi.Chat.Services;
+using PaperSystemApi.Data;
+using PaperSystemApi.Models;
+using PaperSystemApi.Repositories;
+using PaperSystemApi.Interfaces;
+using PaperSystemApi.Services;
 
 // Friendship Service
-using PaperSystemApi.FriendshipServices.Data;
-using PaperSystemApi.FriendshipServices.Entities;
-using PaperSystemApi.FriendshipServices.Repositories;
-using PaperSystemApi.FriendshipServices.Interfaces;
-using PaperSystemApi.FriendshipServices.Services;
+using PaperSystemApi.Data;
+using PaperSystemApi.Models;
+using PaperSystemApi.Repositories;
+using PaperSystemApi.Interfaces;
+using PaperSystemApi.Services;
 
 // File Service
-using PaperSystemApi.File.Data;
-using PaperSystemApi.File.Entities;
-using PaperSystemApi.File.Repositories;
-using PaperSystemApi.File.Interfaces;
-using PaperSystemApi.File.Services;
+using PaperSystemApi.Data;
+using PaperSystemApi.Models;
+using PaperSystemApi.Repositories;
+using PaperSystemApi.Interfaces;
+using PaperSystemApi.Services;
 
 // AI Service
-using PaperSystemApi.AI.Data;
-using PaperSystemApi.AI.Entities;
-using PaperSystemApi.AI.Repositories;
-using PaperSystemApi.AI.Interfaces;
-using PaperSystemApi.AI.Services;
+using PaperSystemApi.Data;
+using PaperSystemApi.Models;
+using PaperSystemApi.Repositories;
+using PaperSystemApi.Interfaces;
+using PaperSystemApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -106,7 +106,7 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 // 4. 数据库上下文配置 - UserService
-builder.Services.AddDbContext<PaperSystemApi.UserServices.Data.UserDbContext>(options =>
+builder.Services.AddDbContext<PaperSystemApi.Data.UserDbContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("UserDatabase");
     if (!string.IsNullOrEmpty(connectionString))
@@ -128,7 +128,7 @@ builder.Services.AddDbContext<PaperSystemApi.UserServices.Data.UserDbContext>(op
 });
 
 // 5. 数据库上下文配置 - WritingService
-builder.Services.AddDbContext<PaperSystemApi.Writing.Data.WritingDbContext>(options =>
+builder.Services.AddDbContext<PaperSystemApi.Data.WritingDbContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("WritingDatabase");
     if (!string.IsNullOrEmpty(connectionString))
@@ -150,7 +150,7 @@ builder.Services.AddDbContext<PaperSystemApi.Writing.Data.WritingDbContext>(opti
 });
 
 // 6. 数据库上下文配置 - ChatService
-builder.Services.AddDbContext<PaperSystemApi.Chat.Data.ChatDbContext>(options =>
+builder.Services.AddDbContext<PaperSystemApi.Data.ChatDbContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("ChatDatabase");
     if (!string.IsNullOrEmpty(connectionString))
@@ -172,7 +172,7 @@ builder.Services.AddDbContext<PaperSystemApi.Chat.Data.ChatDbContext>(options =>
 });
 
 // 7. 数据库上下文配置 - FriendshipService
-builder.Services.AddDbContext<PaperSystemApi.FriendshipServices.Data.FriendshipDbContext>(options =>
+builder.Services.AddDbContext<PaperSystemApi.Data.FriendshipDbContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("FriendshipDatabase");
     if (!string.IsNullOrEmpty(connectionString))
@@ -194,7 +194,7 @@ builder.Services.AddDbContext<PaperSystemApi.FriendshipServices.Data.FriendshipD
 });
 
 // 8. 数据库上下文配置 - FileService
-builder.Services.AddDbContext<PaperSystemApi.File.Data.FileDbContext>(options =>
+builder.Services.AddDbContext<PaperSystemApi.Data.FileDbContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("FileDatabase");
     if (!string.IsNullOrEmpty(connectionString))
@@ -216,7 +216,7 @@ builder.Services.AddDbContext<PaperSystemApi.File.Data.FileDbContext>(options =>
 });
 
 // 9. 数据库上下文配置 - AIService
-builder.Services.AddDbContext<PaperSystemApi.AI.Data.AIDbContext>(options =>
+builder.Services.AddDbContext<PaperSystemApi.Data.AIDbContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("AIDatabase");
     if (!string.IsNullOrEmpty(connectionString))
@@ -288,12 +288,12 @@ builder.Services.AddResponseCompression(options =>
 
 // 13. 健康检查
 builder.Services.AddHealthChecks()
-    .AddDbContextCheck<PaperSystemApi.UserServices.Data.UserDbContext>("UserDatabase", tags: new[] { "ready" })
-    .AddDbContextCheck<PaperSystemApi.Writing.Data.WritingDbContext>("WritingDatabase", tags: new[] { "ready" })
-    .AddDbContextCheck<PaperSystemApi.Chat.Data.ChatDbContext>("ChatDatabase", tags: new[] { "ready" })
-    .AddDbContextCheck<PaperSystemApi.FriendshipServices.Data.FriendshipDbContext>("FriendshipDatabase", tags: new[] { "ready" })
-    .AddDbContextCheck<PaperSystemApi.File.Data.FileDbContext>("FileDatabase", tags: new[] { "ready" })
-    .AddDbContextCheck<PaperSystemApi.AI.Data.AIDbContext>("AIDatabase", tags: new[] { "ready" });
+    .AddDbContextCheck<PaperSystemApi.Data.UserDbContext>("UserDatabase", tags: new[] { "ready" })
+    .AddDbContextCheck<PaperSystemApi.Data.WritingDbContext>("WritingDatabase", tags: new[] { "ready" })
+    .AddDbContextCheck<PaperSystemApi.Data.ChatDbContext>("ChatDatabase", tags: new[] { "ready" })
+    .AddDbContextCheck<PaperSystemApi.Data.FriendshipDbContext>("FriendshipDatabase", tags: new[] { "ready" })
+    .AddDbContextCheck<PaperSystemApi.Data.FileDbContext>("FileDatabase", tags: new[] { "ready" })
+    .AddDbContextCheck<PaperSystemApi.Data.AIDbContext>("AIDatabase", tags: new[] { "ready" });
 
 // 14. AutoMapper
 builder.Services.AddAutoMapper(typeof(Program));
@@ -311,33 +311,33 @@ builder.Services.AddCors(options =>
 });
 
 // 16. 注册UserService服务
-builder.Services.AddScoped<PaperSystemApi.UserServices.Helpers.IPasswordHasher, PaperSystemApi.UserServices.Helpers.PasswordHasher>();
-builder.Services.AddScoped<PaperSystemApi.UserServices.Helpers.IJwtTokenGenerator, PaperSystemApi.UserServices.Helpers.JwtTokenGenerator>();
-builder.Services.AddScoped<PaperSystemApi.UserServices.Interfaces.IUserRepository, PaperSystemApi.UserServices.Repositories.UserRepository>();
-builder.Services.AddScoped<PaperSystemApi.UserServices.Interfaces.IUserServiceS, PaperSystemApi.UserServices.Services.UserServiceS>();
+builder.Services.AddScoped<PaperSystemApi.Models.IPasswordHasher, PaperSystemApi.Models.PasswordHasher>();
+builder.Services.AddScoped<PaperSystemApi.Models.IJwtTokenGenerator, PaperSystemApi.Models.JwtTokenGenerator>();
+builder.Services.AddScoped<PaperSystemApi.Interfaces.IUserRepository, PaperSystemApi.Repositories.UserRepository>();
+builder.Services.AddScoped<PaperSystemApi.Interfaces.IUserServiceS, PaperSystemApi.Services.UserServiceS>();
 
 // 17. 注册WritingService服务
-builder.Services.AddScoped<PaperSystemApi.Writing.Interfaces.IWritingRepository, PaperSystemApi.Writing.Repositories.WritingRepository>();
-builder.Services.AddScoped<PaperSystemApi.Writing.Interfaces.IWritingServiceS, PaperSystemApi.Writing.Services.WritingServiceS>();
+builder.Services.AddScoped<PaperSystemApi.Interfaces.IWritingRepository, PaperSystemApi.Repositories.WritingRepository>();
+builder.Services.AddScoped<PaperSystemApi.Interfaces.IWritingServiceS, PaperSystemApi.Services.WritingServiceS>();
 
 // 18. 注册ChatService服务
-builder.Services.AddScoped<PaperSystemApi.Chat.Interfaces.IMessageRepository, PaperSystemApi.Chat.Repositories.MessageRepository>();
-builder.Services.AddScoped<PaperSystemApi.Chat.Interfaces.IChatRoomRepository, PaperSystemApi.Chat.Repositories.ChatRoomRepository>();
-builder.Services.AddScoped<PaperSystemApi.Chat.Interfaces.IUserMessageReadRepository, PaperSystemApi.Chat.Repositories.UserMessageReadRepository>();
-builder.Services.AddScoped<PaperSystemApi.Chat.Interfaces.IChatService, PaperSystemApi.Chat.Services.ChatService>();
+builder.Services.AddScoped<PaperSystemApi.Interfaces.IMessageRepository, PaperSystemApi.Repositories.MessageRepository>();
+builder.Services.AddScoped<PaperSystemApi.Interfaces.IChatRoomRepository, PaperSystemApi.Repositories.ChatRoomRepository>();
+builder.Services.AddScoped<PaperSystemApi.Interfaces.IUserMessageReadRepository, PaperSystemApi.Repositories.UserMessageReadRepository>();
+builder.Services.AddScoped<PaperSystemApi.Interfaces.IChatService, PaperSystemApi.Services.ChatService>();
 
 // 19. 注册FriendshipService服务
-builder.Services.AddScoped<PaperSystemApi.FriendshipServices.Interfaces.IFriendshipRepository, PaperSystemApi.FriendshipServices.Repositories.FriendshipRepository>();
-builder.Services.AddScoped<PaperSystemApi.FriendshipServices.Interfaces.IFriendshipService, PaperSystemApi.FriendshipServices.Services.FriendshipService>();
+builder.Services.AddScoped<PaperSystemApi.Interfaces.IFriendshipRepository, PaperSystemApi.Repositories.FriendshipRepository>();
+builder.Services.AddScoped<PaperSystemApi.Interfaces.IFriendshipService, PaperSystemApi.Services.FriendshipService>();
 
 // 20. 注册FileService服务
-builder.Services.AddScoped<PaperSystemApi.File.Interfaces.IFileRepository, PaperSystemApi.File.Repositories.FileRepository>();
-builder.Services.AddScoped<PaperSystemApi.File.Interfaces.IFileService, PaperSystemApi.File.Services.FileService>();
+builder.Services.AddScoped<PaperSystemApi.Interfaces.IFileRepository, PaperSystemApi.Repositories.FileRepository>();
+builder.Services.AddScoped<PaperSystemApi.Interfaces.IFileService, PaperSystemApi.Services.FileService>();
 
 // 21. 注册AIService服务
-builder.Services.AddScoped<PaperSystemApi.AI.Interfaces.IAIAssistantService, PaperSystemApi.AI.Services.AIAssistantService>();
-builder.Services.AddScoped<PaperSystemApi.AI.Interfaces.IAIReviewService, PaperSystemApi.AI.Services.AIReviewService>();
-builder.Services.AddScoped<PaperSystemApi.AI.Interfaces.IAIScoringService, PaperSystemApi.AI.Services.AIScoringService>();
+builder.Services.AddScoped<PaperSystemApi.Interfaces.IAIAssistantService, PaperSystemApi.Services.AIAssistantService>();
+builder.Services.AddScoped<PaperSystemApi.Interfaces.IAIReviewService, PaperSystemApi.Services.AIReviewService>();
+builder.Services.AddScoped<PaperSystemApi.Interfaces.IAIScoringService, PaperSystemApi.Services.AIScoringService>();
 
 var app = builder.Build();
 

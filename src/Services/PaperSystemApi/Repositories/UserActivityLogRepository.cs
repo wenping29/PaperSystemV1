@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using PaperSystemApi.UserServices.Data;
-using PaperSystemApi.UserServices.Entities;
-using PaperSystemApi.UserServices.Interfaces;
+using PaperSystemApi.Data;
+using PaperSystemApi.Models;
+using PaperSystemApi.Interfaces;
 
-namespace PaperSystemApi.UserServices.Repositories
+namespace PaperSystemApi.Repositories
 {
     public class UserActivityLogRepository : IUserActivityLogRepository
     {

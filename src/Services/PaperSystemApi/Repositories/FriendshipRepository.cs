@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using PaperSystemApi.FriendshipServices.Data;
-using PaperSystemApi.FriendshipServices.Entities;
-using PaperSystemApi.FriendshipServices.Interfaces;
+using PaperSystemApi.Data;
+using PaperSystemApi.Models;
+using PaperSystemApi.Interfaces;
 
-namespace PaperSystemApi.FriendshipServices.Repositories
+namespace PaperSystemApi.Repositories
 {
     public class FriendshipRepository : IFriendshipRepository
     {

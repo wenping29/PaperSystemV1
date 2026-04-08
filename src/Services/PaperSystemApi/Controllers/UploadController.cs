@@ -2,8 +2,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using StackExchange.Redis;
-using PaperSystemApi.File.DTOs;
-using PaperSystemApi.File.Interfaces;
+using PaperSystemApi.DTOs;
+using PaperSystemApi.Interfaces;
 
 namespace PaperSystemApi.Controllers
 {

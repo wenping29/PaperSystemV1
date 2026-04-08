@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using PaperSystemApi.AI.DTOs;
+using PaperSystemApi.DTOs;
 
 namespace PaperSystemApi.Models
 {

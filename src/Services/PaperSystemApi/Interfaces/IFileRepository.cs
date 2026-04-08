@@ -1,6 +1,6 @@
-using PaperSystemApi.File.Entities;
+using PaperSystemApi.Models;
 
-namespace PaperSystemApi.File.Interfaces
+namespace PaperSystemApi.Interfaces
 {
     public interface IFileRepository
     {

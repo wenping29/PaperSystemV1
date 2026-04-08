@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Http;
-using PaperSystemApi.File.DTOs;
+using PaperSystemApi.DTOs;
 
-namespace PaperSystemApi.File.Interfaces
+namespace PaperSystemApi.Interfaces
 {
     public interface IFileService
     {

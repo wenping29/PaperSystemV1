@@ -1,6 +1,6 @@
 using System;
 
-namespace PaperSystemApi.FriendshipServices.DTOs
+namespace PaperSystemApi.DTOs
 {
     public class FriendshipDTO
     {

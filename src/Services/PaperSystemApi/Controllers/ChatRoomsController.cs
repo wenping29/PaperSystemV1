@@ -1,8 +1,8 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PaperSystemApi.Chat.DTOs;
-using PaperSystemApi.Chat.Interfaces;
+using PaperSystemApi.DTOs;
+using PaperSystemApi.Interfaces;
 
 namespace PaperSystemApi.Controllers
 {

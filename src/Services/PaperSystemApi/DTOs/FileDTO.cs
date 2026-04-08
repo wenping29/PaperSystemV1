@@ -1,7 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Http;
 
-namespace PaperSystemApi.File.DTOs
+namespace PaperSystemApi.DTOs
 {
     public class FileDTO
     {

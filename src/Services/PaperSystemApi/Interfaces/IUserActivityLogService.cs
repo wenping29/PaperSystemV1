@@ -1,7 +1,7 @@
 using PaperSystemApi.DTOs;
 using PaperSystemApi.Models;
 
-namespace PaperSystemApi.Services
+namespace PaperSystemApi.Interfaces
 {
     public interface IUserActivityLogService
     {

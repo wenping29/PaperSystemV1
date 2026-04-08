@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using PaperSystemApi.AI.DTOs;
-using PaperSystemApi.AI.Interfaces;
+using PaperSystemApi.DTOs;
+using PaperSystemApi.Interfaces;
 
 namespace PaperSystemApi.Controllers
 {

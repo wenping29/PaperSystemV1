@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using PaperSystemApi.Writing.Data;
-using PaperSystemApi.Writing.Entities;
-using PaperSystemApi.Writing.Interfaces;
+using PaperSystemApi.Data;
+using PaperSystemApi.Models;
+using PaperSystemApi.Interfaces;
 
-namespace PaperSystemApi.Writing.Repositories
+namespace PaperSystemApi.Repositories
 {
     public class WritingRepository : IWritingRepository
     {

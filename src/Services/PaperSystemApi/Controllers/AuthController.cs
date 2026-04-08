@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
-using PaperSystemApi.UserServices.DTOs;
-using PaperSystemApi.UserServices.Interfaces;
+using PaperSystemApi.DTOs;
+using PaperSystemApi.Interfaces;
 
 namespace PaperSystemApi.Controllers
 {

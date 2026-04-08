@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace PaperSystemApi.Chat.DTOs
+namespace PaperSystemApi.DTOs
 {
     /// <summary>
     /// 创建聊天室请求
