@@ -251,10 +251,10 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration["Jwt:Issuer"] ?? "WritingPlatform",
-        ValidAudience = builder.Configuration["Jwt:Audience"] ?? "WritingPlatformUsers",
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
         IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(
-            System.Text.Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? "YourSuperSecretKeyForJWTTokenGenerationAtLeast32Characters"))
+            System.Text.Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]))
     };
 });
 
@@ -311,8 +311,8 @@ builder.Services.AddCors(options =>
 });
 
 // 16. 注册UserService服务
-builder.Services.AddScoped<PaperSystemApi.UserServices.Interfaces.IPasswordHasher, PaperSystemApi.UserServices.Helpers.PasswordHasher>();
-builder.Services.AddScoped<PaperSystemApi.UserServices.Interfaces.IJwtTokenGenerator, PaperSystemApi.UserServices.Helpers.JwtTokenGenerator>();
+builder.Services.AddScoped<PaperSystemApi.UserServices.Helpers.IPasswordHasher, PaperSystemApi.UserServices.Helpers.PasswordHasher>();
+builder.Services.AddScoped<PaperSystemApi.UserServices.Helpers.IJwtTokenGenerator, PaperSystemApi.UserServices.Helpers.JwtTokenGenerator>();
 builder.Services.AddScoped<PaperSystemApi.UserServices.Interfaces.IUserRepository, PaperSystemApi.UserServices.Repositories.UserRepository>();
 builder.Services.AddScoped<PaperSystemApi.UserServices.Interfaces.IUserServiceS, PaperSystemApi.UserServices.Services.UserServiceS>();
 
