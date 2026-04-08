@@ -5,13 +5,6 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace PaperSystemApi.UserServices.Helpers
 {
-    public interface IJwtTokenGenerator
-    {
-        string GenerateToken(long userId, string username, string role);
-        ClaimsPrincipal? ValidateToken(string token);
-        string GenerateRefreshToken();
-    }
-
     public class JwtTokenGenerator : IJwtTokenGenerator
     {
         private readonly IConfiguration _configuration;
@@ -23,26 +16,27 @@ namespace PaperSystemApi.UserServices.Helpers
 
         public string GenerateToken(long userId, string username, string role)
         {
-            var jwtSettings = _configuration.GetSection("Jwt");
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                jwtSettings["Key"] ?? "YourSuperSecretKeyForJWTTokenGenerationAtLeast32Characters"));
+            var secretKey = _configuration["Jwt:SecretKey"] ?? throw new ArgumentNullException("Jwt:SecretKey");
+            var issuer = _configuration["Jwt:Issuer"] ?? "WritingPlatform";
+            var audience = _configuration["Jwt:Audience"] ?? "WritingPlatformUsers";
+            var expiryHours = _configuration.GetValue<int>("Jwt:ExpiresHours", 24);
 
-            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
                 new Claim(JwtRegisteredClaimNames.UniqueName, username),
                 new Claim(ClaimTypes.Role, role),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64)
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
             var token = new JwtSecurityToken(
-                issuer: jwtSettings["Issuer"] ?? "WritingPlatform",
-                audience: jwtSettings["Audience"] ?? "WritingPlatformUsers",
+                issuer: issuer,
+                audience: audience,
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(Convert.ToDouble(jwtSettings["ExpireMinutes"] ?? "60")),
+                expires: DateTime.UtcNow.AddHours(expiryHours),
                 signingCredentials: credentials
             );
 
@@ -51,26 +45,29 @@ namespace PaperSystemApi.UserServices.Helpers
 
         public ClaimsPrincipal? ValidateToken(string token)
         {
-            var jwtSettings = _configuration.GetSection("Jwt");
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                jwtSettings["Key"] ?? "YourSuperSecretKeyForJWTTokenGenerationAtLeast32Characters"));
-
-            var tokenHandler = new JwtSecurityTokenHandler();
             try
             {
+                var secretKey = _configuration["Jwt:SecretKey"] ?? throw new ArgumentNullException("Jwt:SecretKey");
+                var issuer = _configuration["Jwt:Issuer"] ?? "WritingPlatform";
+                var audience = _configuration["Jwt:Audience"] ?? "WritingPlatformUsers";
+
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var key = Encoding.UTF8.GetBytes(secretKey);
+
                 var validationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = key,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
                     ValidateIssuer = true,
-                    ValidIssuer = jwtSettings["Issuer"] ?? "WritingPlatform",
+                    ValidIssuer = issuer,
                     ValidateAudience = true,
-                    ValidAudience = jwtSettings["Audience"] ?? "WritingPlatformUsers",
+                    ValidAudience = audience,
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.Zero
                 };
 
-                return tokenHandler.ValidateToken(token, validationParameters, out _);
+                var principal = tokenHandler.ValidateToken(token, validationParameters, out _);
+                return principal;
             }
             catch
             {
@@ -80,7 +77,7 @@ namespace PaperSystemApi.UserServices.Helpers
 
         public string GenerateRefreshToken()
         {
-            var randomNumber = new byte[32];
+            var randomNumber = new byte[64];
             using var rng = System.Security.Cryptography.RandomNumberGenerator.Create();
             rng.GetBytes(randomNumber);
             return Convert.ToBase64String(randomNumber);
