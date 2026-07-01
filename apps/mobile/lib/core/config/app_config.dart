@@ -42,7 +42,7 @@ class AppConfig {
 
     // 设置API基础URL
     if (!prefs.containsKey('api_base_url')) {
-      await prefs.setString('api_base_url', 'http://localhost:8000/api/v1');
+      await prefs.setString('api_base_url', 'http://localhost:5000/api/v1');
     }
 
     // 设置是否首次启动
@@ -53,7 +53,7 @@ class AppConfig {
 
   // 获取API基础URL
   static String get apiBaseUrl {
-    return prefs.getString('api_base_url') ?? 'http://localhost:8000/api/v1';
+    return prefs.getString('api_base_url') ?? 'http://localhost:5000/api/v1';
   }
 
   // 设置API基础URL
