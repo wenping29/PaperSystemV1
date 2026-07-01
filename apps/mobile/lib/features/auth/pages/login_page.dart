@@ -150,7 +150,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                 width: 24,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
-                                  color: Colors.white,
+                                  color: Color.fromARGB(255, 53, 7, 218),
                                 ),
                               )
                             : const Text(

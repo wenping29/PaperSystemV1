@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class AppTheme {
@@ -23,11 +24,6 @@ class AppTheme {
         color: Colors.grey.shade900,
       ),
     ),
-    // cardTheme: CardTheme(
-    //   elevation: 1,
-    //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-    //   color: Colors.white,
-    // ),
     buttonTheme: ButtonThemeData(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
     ),
@@ -53,7 +49,8 @@ class AppTheme {
       ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
     ),
-    fontFamily: 'PingFang SC', // 中文优先
+    // Web 平台不指定 fontFamily，让浏览器使用系统字体
+    fontFamily: kIsWeb ? null : 'PingFang SC',
     textTheme: TextTheme(
       displayLarge: TextStyle(
         fontSize: 28,
@@ -110,15 +107,13 @@ class AppTheme {
         color: Colors.white,
       ),
     ),
-    cardTheme:
-        CardThemeData(
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              color: Colors.grey.shade800,
-            )
-            as CardThemeData,
+    cardTheme: CardThemeData(
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      color: Colors.grey.shade800,
+    ) as CardThemeData,
     buttonTheme: ButtonThemeData(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
     ),
@@ -146,7 +141,8 @@ class AppTheme {
       hintStyle: TextStyle(color: Colors.grey.shade400),
       labelStyle: TextStyle(color: Colors.grey.shade300),
     ),
-    fontFamily: 'PingFang SC',
+    // Web 平台不指定 fontFamily，让浏览器使用系统字体
+    fontFamily: kIsWeb ? null : 'PingFang SC',
     textTheme: TextTheme(
       displayLarge: TextStyle(
         fontSize: 28,
