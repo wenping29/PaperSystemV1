@@ -33,7 +33,7 @@ class Article {
 
   factory Article.fromJson(Map<String, dynamic> json) {
     return Article(
-      id: json['id'] ?? '',
+      id: (json['id'] ?? '').toString(),
       title: json['title'] ?? '',
       content: json['content'] ?? '',
       authorId: json['author_id'] ?? json['authorId'] ?? '',

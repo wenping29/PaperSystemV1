@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../features/auth/providers/auth_provider.dart';
+import '../../../features/home/providers/home_provider.dart';
 import '../../../features/writing/models/article_model.dart';
 
 class HomePage extends ConsumerStatefulWidget {
@@ -113,56 +114,20 @@ class _HomePageState extends ConsumerState<HomePage> {
 }
 
 // 首页标签页
-class _HomeTab extends ConsumerWidget {
+class _HomeTab extends ConsumerStatefulWidget {
   const _HomeTab();
 
-  Future<List<Article>> _loadArticles() async {
-    // TODO: 从API加载推荐文章
-    await Future.delayed(const Duration(milliseconds: 500));
-    return [
-      Article(
-        id: '1',
-        title: '欢迎使用AI写作平台',
-        content: '这是一个示例文章内容，展示了AI写作平台的强大功能。',
-        authorId: '1',
-        authorName: '官方账号',
-        tags: ['指南', '入门'],
-        status: ArticleStatus.published,
-        createdAt: DateTime.now().subtract(const Duration(hours: 2)),
-        views: 123,
-        likes: 45,
-        comments: 12,
-        isLiked: false,
-      ),
-      Article(
-        id: '2',
-        title: '如何提升写作效率',
-        content: '分享一些提升写作效率的技巧和方法。',
-        authorId: '2',
-        authorName: '写作达人',
-        tags: ['技巧', '效率'],
-        status: ArticleStatus.published,
-        createdAt: DateTime.now().subtract(const Duration(days: 1)),
-        views: 456,
-        likes: 89,
-        comments: 23,
-        isLiked: true,
-      ),
-      Article(
-        id: '3',
-        title: 'AI辅助写作的未来',
-        content: '探讨AI技术在写作领域的应用和未来发展趋势。',
-        authorId: '3',
-        authorName: '科技观察者',
-        tags: ['AI', '未来'],
-        status: ArticleStatus.published,
-        createdAt: DateTime.now().subtract(const Duration(days: 3)),
-        views: 789,
-        likes: 156,
-        comments: 45,
-        isLiked: false,
-      ),
-    ];
+  @override
+  ConsumerState<_HomeTab> createState() => _HomeTabState();
+}
+
+class _HomeTabState extends ConsumerState<_HomeTab> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(homeProvider.notifier).loadHomeData();
+    });
   }
 
   Widget _buildArticleCard(BuildContext context, Article article) {
@@ -177,7 +142,6 @@ class _HomeTab extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 作者信息
               Row(
                 children: [
                   CircleAvatar(
@@ -211,7 +175,6 @@ class _HomeTab extends ConsumerWidget {
                 ],
               ),
               const SizedBox(height: 12),
-              // 标题
               Text(
                 article.title,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -221,7 +184,6 @@ class _HomeTab extends ConsumerWidget {
                 overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(height: 8),
-              // 内容摘要
               Text(
                 article.content.length > 100
                     ? '${article.content.substring(0, 100)}...'
@@ -231,7 +193,6 @@ class _HomeTab extends ConsumerWidget {
                 overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(height: 12),
-              // 标签和统计
               Row(
                 children: [
                   if (article.tags.isNotEmpty)
@@ -300,31 +261,28 @@ class _HomeTab extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return FutureBuilder<List<Article>>(
-      future: _loadArticles(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
+  Widget build(BuildContext context) {
+    final homeAsync = ref.watch(homeProvider);
 
-        if (snapshot.hasError) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text('加载失败'),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: const Text('重试'),
-                ),
-              ],
+    return homeAsync.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, _) => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('加载失败'),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                ref.read(homeProvider.notifier).loadHomeData();
+              },
+              child: const Text('重试'),
             ),
-          );
-        }
-
-        final articles = snapshot.data ?? [];
+          ],
+        ),
+      ),
+      data: (homeData) {
+        final articles = homeData.recent;
 
         if (articles.isEmpty) {
           return Center(
@@ -358,7 +316,7 @@ class _HomeTab extends ConsumerWidget {
 
         return RefreshIndicator(
           onRefresh: () async {
-            // TODO: 刷新文章列表
+            await ref.read(homeProvider.notifier).loadHomeData();
           },
           child: ListView.builder(
             itemCount: articles.length,
