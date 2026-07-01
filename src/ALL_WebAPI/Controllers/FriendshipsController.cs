@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
-using StackExchange.Redis;
 using System.Text.Json;
 using PaperSystemApi.DTOs;
 using PaperSystemApi.Interfaces;
@@ -16,18 +15,15 @@ namespace PaperSystemApi.Controllers
         private readonly ILogger<FriendshipsController> _logger;
         private readonly IFriendshipService _friendshipService;
         private readonly IDistributedCache _cache;
-        private readonly IConnectionMultiplexer _redis;
 
         public FriendshipsController(
             ILogger<FriendshipsController> logger,
             IFriendshipService friendshipService,
-            IDistributedCache cache,
-            IConnectionMultiplexer redis)
+            IDistributedCache cache)
         {
             _logger = logger;
             _friendshipService = friendshipService;
             _cache = cache;
-            _redis = redis;
         }
 
         [HttpGet]
@@ -329,27 +325,6 @@ namespace PaperSystemApi.Controllers
 
         private async Task ClearFriendshipCache(long userId)
         {
-            try
-            {
-                var db = _redis.GetDatabase();
-                var server = _redis.GetServer(_redis.GetEndPoints().First());
-                var pattern = $"WritingPlatform:FriendshipService:friendships:*:user:{userId}:*";
-
-                var keys = server.Keys(pattern: pattern).ToArray();
-                if (keys.Any())
-                {
-                    await db.KeyDeleteAsync(keys);
-                    _logger.LogDebug("Cleared {Count} cache keys with pattern: {Pattern}", keys.Length, pattern);
-                }
-
-                // 也清除统计缓�?
-                var statsKey = $"WritingPlatform:FriendshipService:friendships:stats:{userId}";
-                await db.KeyDeleteAsync(statsKey);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error clearing friendship cache for user {UserId}", userId);
-            }
         }
     }
 }

@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
-using StackExchange.Redis;
 using System.Text.Json;
 using PaperSystemApi.DTOs;
 using PaperSystemApi.Interfaces;
@@ -16,18 +15,15 @@ namespace PaperSystemApi.Controllers
         private readonly ILogger<FilesController> _logger;
         private readonly IFileService _fileService;
         private readonly IDistributedCache _cache;
-        private readonly IConnectionMultiplexer _redis;
 
         public FilesController(
             ILogger<FilesController> logger,
             IFileService fileService,
-            IDistributedCache cache,
-            IConnectionMultiplexer redis)
+            IDistributedCache cache)
         {
             _logger = logger;
             _fileService = fileService;
             _cache = cache;
-            _redis = redis;
         }
 
         [HttpGet]
@@ -373,40 +369,10 @@ namespace PaperSystemApi.Controllers
         {
             var cacheKey = $"file:{fileId}";
             await _cache.RemoveAsync(cacheKey);
-
-            // 直接清除Redis中的键以确保一致�?
-            try
-            {
-                var db = _redis.GetDatabase();
-                var fullKey = $"WritingPlatform:FileService:{cacheKey}";
-                await db.KeyDeleteAsync(fullKey);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error clearing file cache directly for file {FileId}", fileId);
-            }
         }
 
         private async Task ClearFilesCache()
         {
-            try
-            {
-                var db = _redis.GetDatabase();
-                var server = _redis.GetServer(_redis.GetEndPoints().First());
-                var pattern = "WritingPlatform:FileService:files:*";
-
-                var keys = server.Keys(pattern: pattern).ToArray();
-                if (keys.Any())
-                {
-                    await db.KeyDeleteAsync(keys);
-                    _logger.LogDebug("Cleared {Count} cache keys with pattern: {Pattern}", keys.Length, pattern);
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error clearing files cache");
-                // 不抛出异常，避免影响主要业务逻辑
-            }
         }
 
         [HttpGet("hash/{fileHash}")]

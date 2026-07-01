@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using StackExchange.Redis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -149,26 +147,9 @@ builder.Services.AddAuthentication(options =>
 });
 
 // =========================================
-// 7. Redis分布式缓存
+// 7. 分布式缓存（内存缓存）
 // =========================================
-var redisEnabled = builder.Configuration.GetValue<bool>("Redis:Enabled", true);
-var redisConfiguration = builder.Configuration.GetConnectionString("Redis");
-if (redisEnabled && !string.IsNullOrEmpty(redisConfiguration))
-{
-    builder.Services.AddStackExchangeRedisCache(options =>
-    {
-        options.Configuration = redisConfiguration;
-        options.InstanceName = "WritingPlatform:";
-    });
-
-    builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
-        ConnectionMultiplexer.Connect(redisConfiguration));
-}
-else
-{
-    builder.Services.AddDistributedMemoryCache();
-    builder.Services.AddSingleton<IConnectionMultiplexer>(_ => null!);
-}
+builder.Services.AddDistributedMemoryCache();
 
 // =========================================
 // 8. 响应压缩
@@ -213,6 +194,8 @@ builder.Services.AddCors(options =>
 // =========================================
 // 12. 注册服务
 // =========================================
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<IApiClient, MockApiClient>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
