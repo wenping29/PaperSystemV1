@@ -272,7 +272,7 @@ namespace PaperSystemApi.Services
             // 创建基于模板的新作品
             var work = new Work
             {
-                Title = (string)(request.Title ?? template.Name),
+                Title = (string)(request.Title ?? template.Title),
                 Content = template.Content,
                 AuthorId = userId,
                 CategoryId = template.CategoryId,

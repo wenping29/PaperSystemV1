@@ -19,6 +19,13 @@ namespace PaperSystemApi.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.Ignore(e => e.Followers);
+                entity.Ignore(e => e.Following);
+                entity.Ignore(e => e.Profile);
+            });
+
             // 配置Message实体
             modelBuilder.Entity<Message>(entity =>
             {

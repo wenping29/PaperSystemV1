@@ -49,7 +49,6 @@ namespace PaperSystemApi.Models
             get => string.IsNullOrEmpty(TagsJson) ? null : System.Text.Json.JsonSerializer.Deserialize<string[]>(TagsJson);
             set => TagsJson = value == null ? null : System.Text.Json.JsonSerializer.Serialize(value);
         }
-        public object Name { get; internal set; }
 
     }
 
