@@ -40,11 +40,12 @@ class AppConfig {
       await prefs.setString('language', 'zh');
     }
 
+//http://localhost:5000/api/v1/auth/login
     // 设置API基础URL
     if (!prefs.containsKey('api_base_url')) {
       await prefs.setString('api_base_url', 'http://localhost:5000/api/v1');
     }
-
+//http://localhost:5000/api/v1/auth/login
     // 设置是否首次启动
     if (!prefs.containsKey('first_launch')) {
       await prefs.setBool('first_launch', true);
