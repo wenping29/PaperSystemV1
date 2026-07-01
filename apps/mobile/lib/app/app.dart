@@ -14,6 +14,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       title: 'AI平台',
       theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: ThemeMode.light,
       routerConfig: router,
       debugShowCheckedModeBanner: false,
       builder: (context, child) {
