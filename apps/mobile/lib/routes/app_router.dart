@@ -18,30 +18,24 @@ class AppRouter {
       GoRoute(
         path: '/login',
         name: 'login',
-        pageBuilder: (context, state) => MaterialPage(
-          key: state.pageKey,
-          child: const LoginPage(),
-        ),
+        pageBuilder: (context, state) =>
+            MaterialPage(key: state.pageKey, child: const LoginPage()),
       ),
 
       // 注册页
       GoRoute(
         path: '/register',
         name: 'register',
-        pageBuilder: (context, state) => MaterialPage(
-          key: state.pageKey,
-          child: const RegisterPage(),
-        ),
+        pageBuilder: (context, state) =>
+            MaterialPage(key: state.pageKey, child: const RegisterPage()),
       ),
 
       // 主页（底部导航）
       GoRoute(
-        path: '/',
+        path: '/home',
         name: 'home',
-        pageBuilder: (context, state) => MaterialPage(
-          key: state.pageKey,
-          child: const HomePage(),
-        ),
+        pageBuilder: (context, state) =>
+            MaterialPage(key: state.pageKey, child: const HomePage()),
         routes: [
           // 写作页
           GoRoute(
@@ -69,20 +63,16 @@ class AppRouter {
           GoRoute(
             path: 'square',
             name: 'square',
-            pageBuilder: (context, state) => MaterialPage(
-              key: state.pageKey,
-              child: const SquarePage(),
-            ),
+            pageBuilder: (context, state) =>
+                MaterialPage(key: state.pageKey, child: const SquarePage()),
           ),
 
           // 聊天列表
           GoRoute(
             path: 'chats',
             name: 'chats',
-            pageBuilder: (context, state) => MaterialPage(
-              key: state.pageKey,
-              child: const ChatListPage(),
-            ),
+            pageBuilder: (context, state) =>
+                MaterialPage(key: state.pageKey, child: const ChatListPage()),
           ),
 
           // 聊天详情
@@ -91,9 +81,7 @@ class AppRouter {
             name: 'chat',
             pageBuilder: (context, state) => MaterialPage(
               key: state.pageKey,
-              child: ChatDetailPage(
-                chatId: state.pathParameters['chatId']!,
-              ),
+              child: ChatDetailPage(chatId: state.pathParameters['chatId']!),
             ),
           ),
         ],

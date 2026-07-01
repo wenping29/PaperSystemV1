@@ -29,7 +29,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     if (!_formKey.currentState!.validate()) {
       return;
     }
-
     setState(() {
       _isLoading = true;
     });
@@ -44,7 +43,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     setState(() {
       _isLoading = false;
     });
-
+    print("success:" + success.toString());
     if (success) {
       if (context.mounted) {
         context.go('/home');
