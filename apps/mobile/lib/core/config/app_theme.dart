@@ -50,7 +50,7 @@ class AppTheme {
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
     ),
     // Web 平台不指定 fontFamily，让浏览器使用系统字体
-    fontFamily: kIsWeb ? null : 'PingFang SC',
+    fontFamily: kIsWeb ? 'NotoSansSC' : 'PingFang SC',
     textTheme: TextTheme(
       displayLarge: TextStyle(
         fontSize: 28,
@@ -107,13 +107,15 @@ class AppTheme {
         color: Colors.white,
       ),
     ),
-    cardTheme: CardThemeData(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      color: Colors.grey.shade800,
-    ) as CardThemeData,
+    cardTheme:
+        CardThemeData(
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              color: Colors.grey.shade800,
+            )
+            as CardThemeData,
     buttonTheme: ButtonThemeData(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
     ),
@@ -142,7 +144,7 @@ class AppTheme {
       labelStyle: TextStyle(color: Colors.grey.shade300),
     ),
     // Web 平台不指定 fontFamily，让浏览器使用系统字体
-    fontFamily: kIsWeb ? null : 'PingFang SC',
+    fontFamily: kIsWeb ? 'NotoSansSC' : 'PingFang SC',
     textTheme: TextTheme(
       displayLarge: TextStyle(
         fontSize: 28,
