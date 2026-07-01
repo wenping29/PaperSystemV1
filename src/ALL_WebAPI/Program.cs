@@ -213,6 +213,8 @@ builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IAIAssistantService, AIAssistantService>();
 builder.Services.AddScoped<IAIReviewService, AIReviewService>();
 builder.Services.AddScoped<IAIScoringService, AIScoringService>();
+builder.Services.AddScoped<IUserActivityLogRepository, UserActivityLogRepository>();
+builder.Services.AddScoped<IUserActivityLogService, UserActivityLogService>();
 
 // =========================================
 // 构建应用
