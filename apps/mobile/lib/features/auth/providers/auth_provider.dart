@@ -36,6 +36,7 @@ class AuthState {
 class AuthNotifier extends StateNotifier<AuthState> {
   final ApiService apiService;
   late SharedPreferences prefs;
+  bool _isInitialized = false;
 
   AuthNotifier(this.apiService) : super(AuthState.initial) {
     _loadAuthState();
@@ -43,6 +44,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
   Future<void> _loadAuthState() async {
     prefs = await SharedPreferences.getInstance();
+    _isInitialized = true;
     final token = prefs.getString('auth_token');
     final username = prefs.getString('auth_username');
     final userId = prefs.getString('auth_user_id');
@@ -54,8 +56,14 @@ class AuthNotifier extends StateNotifier<AuthState> {
         username: username,
         userId: userId,
       );
-      // 设置API服务token
       apiService.setToken(token);
+    }
+  }
+
+  Future<void> _ensureInitialized() async {
+    if (!_isInitialized) {
+      prefs = await SharedPreferences.getInstance();
+      _isInitialized = true;
     }
   }
 
@@ -64,21 +72,19 @@ class AuthNotifier extends StateNotifier<AuthState> {
     required String password,
   }) async {
     try {
-      // 调用API登录
-      final response = await apiService.post('/auth/login', data: {
-        'username': username,
-        'password': password,
-      });
-
+      await _ensureInitialized();
+      final response = await apiService.post(
+        '/auth/login',
+        data: {'username': username, 'password': password},
+      );
       if (response.statusCode == 200) {
-        final token = response.data['access_token'];
-        final userId = response.data['user_id'] ?? '';
-
-        // 保存到本地
+        final token = response.data['token'] ?? response.data['access_token'];
+        final userId =
+            (response.data['user']?['id'] ?? response.data['user_id'] ?? '')
+                .toString();
         await prefs.setString('auth_token', token);
         await prefs.setString('auth_username', username);
         await prefs.setString('auth_user_id', userId);
-
         // 更新状态
         state = state.copyWith(
           isLoggedIn: true,
@@ -86,7 +92,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
           username: username,
           userId: userId,
         );
-
         // 设置API服务token
         apiService.setToken(token);
 
@@ -105,14 +110,13 @@ class AuthNotifier extends StateNotifier<AuthState> {
     required String password,
   }) async {
     try {
-      final response = await apiService.post('/auth/register', data: {
-        'username': username,
-        'email': email,
-        'password': password,
-      });
+      await _ensureInitialized();
+      final response = await apiService.post(
+        '/auth/register',
+        data: {'username': username, 'email': email, 'password': password},
+      );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        // 注册成功后自动登录
         return await login(username: username, password: password);
       }
     } catch (e) {
@@ -123,7 +127,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   Future<void> logout() async {
-    // 清除本地存储
+    await _ensureInitialized();
     await prefs.remove('auth_token');
     await prefs.remove('auth_username');
     await prefs.remove('auth_user_id');
@@ -135,10 +139,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     state = AuthState.initial;
   }
 
-  Future<void> updateProfile({
-    String? email,
-    String? avatarUrl,
-  }) async {
+  Future<void> updateProfile({String? email, String? avatarUrl}) async {
     // TODO: 实现更新资料
   }
 }

@@ -12,10 +12,8 @@ class MyApp extends StatelessWidget {
     final GoRouter router = AppRouter.router;
 
     return MaterialApp.router(
-      title: 'AI写作平台',
+      title: 'AI平台',
       theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.light,
       routerConfig: router,
       debugShowCheckedModeBanner: false,
       builder: (context, child) {

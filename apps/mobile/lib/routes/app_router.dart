@@ -5,10 +5,12 @@ import '../features/auth/pages/login_page.dart';
 import '../features/auth/pages/register_page.dart';
 import '../features/home/pages/home_page.dart';
 import '../features/writing/pages/writing_page.dart';
+import '../features/writing/pages/article_detail_page.dart';
 import '../features/profile/pages/profile_page.dart';
 import '../features/square/pages/square_page.dart';
 import '../features/chat/pages/chat_list_page.dart';
 import '../features/chat/pages/chat_detail_page.dart';
+import '../features/settings/pages/connection_settings_page.dart';
 
 class AppRouter {
   static final GoRouter router = GoRouter(
@@ -18,30 +20,32 @@ class AppRouter {
       GoRoute(
         path: '/login',
         name: 'login',
-        pageBuilder: (context, state) => MaterialPage(
-          key: state.pageKey,
-          child: const LoginPage(),
-        ),
+        pageBuilder: (context, state) =>
+            MaterialPage(key: state.pageKey, child: const LoginPage()),
       ),
 
       // 注册页
       GoRoute(
         path: '/register',
         name: 'register',
-        pageBuilder: (context, state) => MaterialPage(
-          key: state.pageKey,
-          child: const RegisterPage(),
-        ),
+        pageBuilder: (context, state) =>
+            MaterialPage(key: state.pageKey, child: const RegisterPage()),
+      ),
+
+      // 连接设置页（独立页面）
+      GoRoute(
+        path: '/connection-settings',
+        name: 'connectionSettings',
+        pageBuilder: (context, state) =>
+            MaterialPage(key: state.pageKey, child: const ConnectionSettingsPage()),
       ),
 
       // 主页（底部导航）
       GoRoute(
-        path: '/',
+        path: '/home',
         name: 'home',
-        pageBuilder: (context, state) => MaterialPage(
-          key: state.pageKey,
-          child: const HomePage(),
-        ),
+        pageBuilder: (context, state) =>
+            MaterialPage(key: state.pageKey, child: const HomePage()),
         routes: [
           // 写作页
           GoRoute(
@@ -69,20 +73,16 @@ class AppRouter {
           GoRoute(
             path: 'square',
             name: 'square',
-            pageBuilder: (context, state) => MaterialPage(
-              key: state.pageKey,
-              child: const SquarePage(),
-            ),
+            pageBuilder: (context, state) =>
+                MaterialPage(key: state.pageKey, child: const SquarePage()),
           ),
 
           // 聊天列表
           GoRoute(
             path: 'chats',
             name: 'chats',
-            pageBuilder: (context, state) => MaterialPage(
-              key: state.pageKey,
-              child: const ChatListPage(),
-            ),
+            pageBuilder: (context, state) =>
+                MaterialPage(key: state.pageKey, child: const ChatListPage()),
           ),
 
           // 聊天详情
@@ -91,10 +91,28 @@ class AppRouter {
             name: 'chat',
             pageBuilder: (context, state) => MaterialPage(
               key: state.pageKey,
-              child: ChatDetailPage(
-                chatId: state.pathParameters['chatId']!,
+              child: ChatDetailPage(chatId: state.pathParameters['chatId']!),
+            ),
+          ),
+
+          // 文章详情
+          GoRoute(
+            path: 'article/:articleId',
+            name: 'articleDetail',
+            pageBuilder: (context, state) => MaterialPage(
+              key: state.pageKey,
+              child: ArticleDetailPage(
+                articleId: state.pathParameters['articleId']!,
               ),
             ),
+          ),
+
+          // 连接设置页（从主页导航）
+          GoRoute(
+            path: 'connection-settings',
+            name: 'homeConnectionSettings',
+            pageBuilder: (context, state) =>
+                MaterialPage(key: state.pageKey, child: const ConnectionSettingsPage()),
           ),
         ],
       ),
@@ -125,6 +143,7 @@ class AppRouter {
     errorPageBuilder: (context, state) => MaterialPage(
       key: state.pageKey,
       child: Scaffold(
+        appBar: AppBar(title: const Text('错误')),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -140,7 +159,7 @@ class AppRouter {
               ),
               const SizedBox(height: 24),
               ElevatedButton(
-                onPressed: () => context.go('/'),
+                onPressed: () => context.go('/home'),
                 child: const Text('返回首页'),
               ),
             ],

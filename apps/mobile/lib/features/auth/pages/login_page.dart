@@ -29,7 +29,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     if (!_formKey.currentState!.validate()) {
       return;
     }
-
     setState(() {
       _isLoading = true;
     });
@@ -37,18 +36,17 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     final username = _usernameController.text.trim();
     final password = _passwordController.text;
 
-    final success = await ref.read(authProvider.notifier).login(
-          username: username,
-          password: password,
-        );
+    final success = await ref
+        .read(authProvider.notifier)
+        .login(username: username, password: password);
 
     setState(() {
       _isLoading = false;
     });
-
+    print("success:" + success.toString());
     if (success) {
       if (context.mounted) {
-        context.go('/');
+        context.go('/home');
       }
     } else {
       if (context.mounted) {
@@ -62,16 +60,29 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     }
   }
 
+  void _openConnectionSettings() {
+    context.push('/connection-settings');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: _openConnectionSettings,
+            tooltip: '连接设置',
+          ),
+        ],
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const SizedBox(height: 60),
+              const SizedBox(height: 40),
               // 标题
               Text(
                 '欢迎回来',
@@ -150,13 +161,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                 width: 24,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
-                                  color: Colors.white,
+                                  color: Color.fromARGB(255, 53, 7, 218),
                                 ),
                               )
-                            : const Text(
-                                '登录',
-                                style: TextStyle(fontSize: 16),
-                              ),
+                            : const Text('登录', style: TextStyle(fontSize: 16)),
                       ),
                     ),
                   ],
@@ -169,10 +177,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    '还没有账号？',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
+                  Text('还没有账号？', style: Theme.of(context).textTheme.bodyMedium),
                   TextButton(
                     onPressed: () => context.push('/register'),
                     child: const Text('立即注册'),
@@ -185,9 +190,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               // 分割线
               Row(
                 children: [
-                  Expanded(
-                    child: Divider(color: Colors.grey.shade300),
-                  ),
+                  Expanded(child: Divider(color: Colors.grey.shade300)),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
@@ -195,9 +198,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ),
-                  Expanded(
-                    child: Divider(color: Colors.grey.shade300),
-                  ),
+                  Expanded(child: Divider(color: Colors.grey.shade300)),
                 ],
               ),
 
@@ -219,6 +220,17 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     color: Colors.black,
                   ),
                 ],
+              ),
+
+              const SizedBox(height: 32),
+
+              // 连接设置快捷入口
+              Center(
+                child: TextButton.icon(
+                  onPressed: _openConnectionSettings,
+                  icon: const Icon(Icons.wifi_tethering, size: 16),
+                  label: const Text('无法连接？配置服务器地址'),
+                ),
               ),
             ],
           ),
