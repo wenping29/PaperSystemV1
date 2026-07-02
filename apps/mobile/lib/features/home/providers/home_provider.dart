@@ -17,15 +17,18 @@ class HomeData {
 
   factory HomeData.fromJson(Map<String, dynamic> json) {
     return HomeData(
-      featured: (json['featured'] as List<dynamic>?)
+      featured:
+          (json['featured'] as List<dynamic>?)
               ?.map((e) => Article.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
-      recent: (json['recent'] as List<dynamic>?)
+      recent:
+          (json['recent'] as List<dynamic>?)
               ?.map((e) => Article.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
-      categories: (json['categories'] as List<dynamic>?)
+      categories:
+          (json['categories'] as List<dynamic>?)
               ?.map((e) => CategoryInfo.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
@@ -85,7 +88,7 @@ class HomeNotifier extends StateNotifier<AsyncValue<HomeData>> {
   Future<void> loadHomeData() async {
     try {
       state = const AsyncValue.loading();
-      final response = await _apiService.get('/home');
+      final response = await _apiService.get('/works?page=1&pageSize=20');
       state = AsyncValue.data(HomeData.fromJson(response.data));
     } catch (e, st) {
       state = AsyncValue.error(e, st);
@@ -93,8 +96,9 @@ class HomeNotifier extends StateNotifier<AsyncValue<HomeData>> {
   }
 }
 
-final homeProvider =
-    StateNotifierProvider<HomeNotifier, AsyncValue<HomeData>>((ref) {
+final homeProvider = StateNotifierProvider<HomeNotifier, AsyncValue<HomeData>>((
+  ref,
+) {
   final apiService = ref.watch(apiServiceProvider);
   return HomeNotifier(apiService);
 });

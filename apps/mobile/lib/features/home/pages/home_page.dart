@@ -128,6 +128,7 @@ class _HomeTabState extends ConsumerState<_HomeTab> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(homeProvider.notifier).loadHomeData();
     });
+    debugPrint('initState');
   }
 
   Widget _buildArticleCard(BuildContext context, Article article) {
@@ -156,9 +157,7 @@ class _HomeTabState extends ConsumerState<_HomeTab> {
                       children: [
                         Text(
                           article.authorName,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w500,
-                          ),
+                          style: const TextStyle(fontWeight: FontWeight.w500),
                         ),
                         Text(
                           article.formattedCreateTime,
@@ -177,9 +176,9 @@ class _HomeTabState extends ConsumerState<_HomeTab> {
               const SizedBox(height: 12),
               Text(
                 article.title,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -198,27 +197,36 @@ class _HomeTabState extends ConsumerState<_HomeTab> {
                   if (article.tags.isNotEmpty)
                     Wrap(
                       spacing: 6,
-                      children: article.tags.take(3).map((tag) => Chip(
-                        label: Text(
-                          tag,
-                          style: TextStyle(
-                            fontSize: 10,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                        ),
-                        backgroundColor: Theme.of(context)
-                            .colorScheme
-                            .primary
-                            .withAlpha(26),
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        visualDensity: VisualDensity.compact,
-                      )).toList(),
+                      children: article.tags
+                          .take(3)
+                          .map(
+                            (tag) => Chip(
+                              label: Text(
+                                tag,
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                              ),
+                              backgroundColor: Theme.of(
+                                context,
+                              ).colorScheme.primary.withAlpha(26),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                              ),
+                              visualDensity: VisualDensity.compact,
+                            ),
+                          )
+                          .toList(),
                     ),
                   const Spacer(),
                   Row(
                     children: [
-                      Icon(Icons.remove_red_eye_outlined,
-                          size: 14, color: Colors.grey.shade600),
+                      Icon(
+                        Icons.remove_red_eye_outlined,
+                        size: 14,
+                        color: Colors.grey.shade600,
+                      ),
                       const SizedBox(width: 4),
                       Text(
                         '${article.views}',
@@ -228,8 +236,11 @@ class _HomeTabState extends ConsumerState<_HomeTab> {
                         ),
                       ),
                       const SizedBox(width: 12),
-                      Icon(Icons.favorite_outline,
-                          size: 14, color: Colors.grey.shade600),
+                      Icon(
+                        Icons.favorite_outline,
+                        size: 14,
+                        color: Colors.grey.shade600,
+                      ),
                       const SizedBox(width: 4),
                       Text(
                         '${article.likes}',
@@ -239,8 +250,11 @@ class _HomeTabState extends ConsumerState<_HomeTab> {
                         ),
                       ),
                       const SizedBox(width: 12),
-                      Icon(Icons.comment_outlined,
-                          size: 14, color: Colors.grey.shade600),
+                      Icon(
+                        Icons.comment_outlined,
+                        size: 14,
+                        color: Colors.grey.shade600,
+                      ),
                       const SizedBox(width: 4),
                       Text(
                         '${article.comments}',
@@ -263,7 +277,7 @@ class _HomeTabState extends ConsumerState<_HomeTab> {
   @override
   Widget build(BuildContext context) {
     final homeAsync = ref.watch(homeProvider);
-
+    debugPrint('buildState');
     return homeAsync.when(
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (error, _) => Center(
@@ -295,19 +309,11 @@ class _HomeTabState extends ConsumerState<_HomeTab> {
                   color: Colors.grey.shade400,
                 ),
                 const SizedBox(height: 16),
-                Text(
-                  '暂无文章',
-                  style: TextStyle(
-                    color: Colors.grey.shade600,
-                  ),
-                ),
+                Text('暂无文章', style: TextStyle(color: Colors.grey.shade600)),
                 const SizedBox(height: 8),
                 Text(
                   '快来发表你的第一篇文章吧',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey.shade500,
-                  ),
+                  style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
                 ),
               ],
             ),
@@ -316,7 +322,9 @@ class _HomeTabState extends ConsumerState<_HomeTab> {
 
         return RefreshIndicator(
           onRefresh: () async {
+            print("刷新");
             await ref.read(homeProvider.notifier).loadHomeData();
+            print("刷新完成");
           },
           child: ListView.builder(
             itemCount: articles.length,
@@ -340,11 +348,7 @@ class _SquareTab extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.explore_outlined,
-            size: 64,
-            color: Colors.grey.shade400,
-          ),
+          Icon(Icons.explore_outlined, size: 64, color: Colors.grey.shade400),
           const SizedBox(height: 16),
           Text(
             '写作广场',
@@ -355,12 +359,7 @@ class _SquareTab extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          Text(
-            '发现更多精彩内容',
-            style: TextStyle(
-              color: Colors.grey.shade500,
-            ),
-          ),
+          Text('发现更多精彩内容', style: TextStyle(color: Colors.grey.shade500)),
           const SizedBox(height: 24),
           ElevatedButton(
             onPressed: () {
@@ -388,18 +387,9 @@ class _ChatsTab extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.chat_outlined,
-              size: 64,
-              color: Colors.grey.shade400,
-            ),
+            Icon(Icons.chat_outlined, size: 64, color: Colors.grey.shade400),
             const SizedBox(height: 16),
-            Text(
-              '登录后查看消息',
-              style: TextStyle(
-                color: Colors.grey.shade600,
-              ),
-            ),
+            Text('登录后查看消息', style: TextStyle(color: Colors.grey.shade600)),
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () {
@@ -416,11 +406,7 @@ class _ChatsTab extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.chat_outlined,
-            size: 64,
-            color: Colors.grey.shade400,
-          ),
+          Icon(Icons.chat_outlined, size: 64, color: Colors.grey.shade400),
           const SizedBox(height: 16),
           Text(
             '消息',
@@ -431,12 +417,7 @@ class _ChatsTab extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 8),
-          Text(
-            '与作者和其他读者交流',
-            style: TextStyle(
-              color: Colors.grey.shade500,
-            ),
-          ),
+          Text('与作者和其他读者交流', style: TextStyle(color: Colors.grey.shade500)),
           const SizedBox(height: 24),
           ElevatedButton(
             onPressed: () {
@@ -466,18 +447,9 @@ class _ProfileTab extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.person_outline,
-              size: 64,
-              color: Colors.grey.shade400,
-            ),
+            Icon(Icons.person_outline, size: 64, color: Colors.grey.shade400),
             const SizedBox(height: 16),
-            Text(
-              '登录后查看个人中心',
-              style: TextStyle(
-                color: Colors.grey.shade600,
-              ),
-            ),
+            Text('登录后查看个人中心', style: TextStyle(color: Colors.grey.shade600)),
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () {
@@ -497,27 +469,15 @@ class _ProfileTab extends ConsumerWidget {
           CircleAvatar(
             radius: 40,
             backgroundColor: Colors.grey.shade200,
-            child: Icon(
-              Icons.person,
-              size: 48,
-              color: Colors.grey.shade400,
-            ),
+            child: Icon(Icons.person, size: 48, color: Colors.grey.shade400),
           ),
           const SizedBox(height: 16),
           Text(
             username ?? '用户',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-            ),
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
           ),
           const SizedBox(height: 8),
-          Text(
-            'ID: $userId',
-            style: TextStyle(
-              color: Colors.grey.shade600,
-            ),
-          ),
+          Text('ID: $userId', style: TextStyle(color: Colors.grey.shade600)),
           const SizedBox(height: 24),
           ElevatedButton(
             onPressed: () {
