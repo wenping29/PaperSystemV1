@@ -135,7 +135,7 @@ class _HomeTabState extends ConsumerState<_HomeTab> {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: InkWell(
         onTap: () {
-          // TODO: 跳转到文章详情页
+          context.push('/home/article/${article.id}');
         },
         child: Padding(
           padding: const EdgeInsets.all(16),

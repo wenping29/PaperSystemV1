@@ -72,15 +72,16 @@ class AuthNotifier extends StateNotifier<AuthState> {
     required String password,
   }) async {
     try {
-      // 调用API登录
+      await _ensureInitialized();
       final response = await apiService.post(
         '/auth/login',
         data: {'username': username, 'password': password},
       );
       if (response.statusCode == 200) {
-        final token = response.data['token'];
-        final userId = response.data['user']['id'].toString() ?? '';
-        // 保存到本地
+        final token = response.data['token'] ?? response.data['access_token'];
+        final userId =
+            (response.data['user']?['id'] ?? response.data['user_id'] ?? '')
+                .toString();
         await prefs.setString('auth_token', token);
         await prefs.setString('auth_username', username);
         await prefs.setString('auth_user_id', userId);
@@ -109,13 +110,13 @@ class AuthNotifier extends StateNotifier<AuthState> {
     required String password,
   }) async {
     try {
+      await _ensureInitialized();
       final response = await apiService.post(
         '/auth/register',
         data: {'username': username, 'email': email, 'password': password},
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        // 注册成功后自动登录
         return await login(username: username, password: password);
       }
     } catch (e) {
@@ -126,7 +127,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   Future<void> logout() async {
-    // 清除本地存储
+    await _ensureInitialized();
     await prefs.remove('auth_token');
     await prefs.remove('auth_username');
     await prefs.remove('auth_user_id');

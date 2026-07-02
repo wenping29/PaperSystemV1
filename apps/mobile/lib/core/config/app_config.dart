@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
+import 'environment_config.dart';
 
 class AppConfig {
   static late SharedPreferences prefs;
@@ -40,12 +41,12 @@ class AppConfig {
       await prefs.setString('language', 'zh');
     }
 
-//http://localhost:5000/api/v1/auth/login
     // 设置API基础URL
+    // 默认使用推荐的环境配置
     if (!prefs.containsKey('api_base_url')) {
-      await prefs.setString('api_base_url', 'http://localhost:5000/api/v1');
+      await prefs.setString('api_base_url', EnvironmentConfig.recommendedBaseUrl);
     }
-//http://localhost:5000/api/v1/auth/login
+
     // 设置是否首次启动
     if (!prefs.containsKey('first_launch')) {
       await prefs.setBool('first_launch', true);
@@ -54,12 +55,36 @@ class AppConfig {
 
   // 获取API基础URL
   static String get apiBaseUrl {
-    return prefs.getString('api_base_url') ?? 'http://localhost:5000/api/v1';
+    return prefs.getString('api_base_url') ?? EnvironmentConfig.recommendedBaseUrl;
   }
 
   // 设置API基础URL
   static Future<void> setApiBaseUrl(String url) async {
     await prefs.setString('api_base_url', url);
+  }
+
+  // 快速切换到预设的环境
+  static Future<void> switchToEnvironment(String envName) async {
+    final url = EnvironmentConfig.environments[envName];
+    if (url != null) {
+      await setApiBaseUrl(url);
+    }
+  }
+
+  // 获取所有可用环境
+  static Map<String, String> get availableEnvironments {
+    return EnvironmentConfig.environments;
+  }
+
+  // 获取当前环境名称
+  static String? get currentEnvironmentName {
+    final url = apiBaseUrl;
+    for (final entry in EnvironmentConfig.environments.entries) {
+      if (entry.value == url) {
+        return entry.key;
+      }
+    }
+    return null;
   }
 
   // 获取主题模式
@@ -105,5 +130,10 @@ class AppConfig {
   static Future<void> clearAll() async {
     await prefs.clear();
     await appBox.clear();
+  }
+
+  // 重置API配置为默认
+  static Future<void> resetApiBaseUrl() async {
+    await prefs.setString('api_base_url', EnvironmentConfig.recommendedBaseUrl);
   }
 }

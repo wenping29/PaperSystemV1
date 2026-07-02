@@ -60,16 +60,29 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     }
   }
 
+  void _openConnectionSettings() {
+    context.push('/connection-settings');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: _openConnectionSettings,
+            tooltip: '连接设置',
+          ),
+        ],
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const SizedBox(height: 60),
+              const SizedBox(height: 40),
               // 标题
               Text(
                 '欢迎回来',
@@ -207,6 +220,17 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     color: Colors.black,
                   ),
                 ],
+              ),
+
+              const SizedBox(height: 32),
+
+              // 连接设置快捷入口
+              Center(
+                child: TextButton.icon(
+                  onPressed: _openConnectionSettings,
+                  icon: const Icon(Icons.wifi_tethering, size: 16),
+                  label: const Text('无法连接？配置服务器地址'),
+                ),
               ),
             ],
           ),
